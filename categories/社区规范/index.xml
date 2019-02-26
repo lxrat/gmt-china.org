@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>社区规范 on GMT中文社区</title>
+    <link>https://gmt-china.org/categories/%E7%A4%BE%E5%8C%BA%E8%A7%84%E8%8C%83/</link>
+    <description>Recent content in 社区规范 on GMT中文社区</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>&amp;copy; 2016–2019 GMT 中文社区</copyright>
+    <lastBuildDate>Wed, 23 Aug 2017 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="https://gmt-china.org/categories/%E7%A4%BE%E5%8C%BA%E8%A7%84%E8%8C%83/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>GMT中文社区QQ群入群须知</title>
+      <link>https://gmt-china.org/blog/community-guide/</link>
+      <pubDate>Wed, 23 Aug 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://gmt-china.org/blog/community-guide/</guid>
+      <description>欢迎加入“地学GMT中文社区群”： 一群：218905582 (已满) 二群：791856541 GMT中文社区群是一个相对活跃且学术氛围浓厚的群。</description>
+    </item>
+    
+    <item>
+      <title>投稿须知</title>
+      <link>https://gmt-china.org/blog/instructions-for-authors/</link>
+      <pubDate>Thu, 17 Aug 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://gmt-china.org/blog/instructions-for-authors/</guid>
+      <description>GMT 中文社区欢迎读者投稿，投稿者请将稿件发送至 admin@gmt-china.org 。 投稿分为两类：博文和示例。 博文的要求 博文是与 GMT、科学研究和社区活动等有关的简短文章，包括</description>
+    </item>
+    
+  </channel>
+</rss>

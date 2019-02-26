@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>社区动态 on GMT中文社区</title>
+    <link>https://gmt-china.org/categories/%E7%A4%BE%E5%8C%BA%E5%8A%A8%E6%80%81/</link>
+    <description>Recent content in 社区动态 on GMT中文社区</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>&amp;copy; 2016–2019 GMT 中文社区</copyright>
+    <lastBuildDate>Tue, 27 Sep 2016 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="https://gmt-china.org/categories/%E7%A4%BE%E5%8C%BA%E5%8A%A8%E6%80%81/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>GMT中文社区第二次线下聚餐</title>
+      <link>https://gmt-china.org/blog/gud-20160921/</link>
+      <pubDate>Tue, 27 Sep 2016 00:00:00 +0000</pubDate>
+      
+      <guid>https://gmt-china.org/blog/gud-20160921/</guid>
+      <description>2016年9月21日，借GMT中文社区首次线下培训契机，在社区创始人田冬冬博士和GMT群管理员 刘珠妹老师的号召下，GMT中文社区在湖北武汉组</description>
+    </item>
+    
+    <item>
+      <title>GMT中文社区首次线下培训</title>
+      <link>https://gmt-china.org/blog/gmtcon-20160921/</link>
+      <pubDate>Sun, 25 Sep 2016 00:00:00 +0000</pubDate>
+      
+      <guid>https://gmt-china.org/blog/gmtcon-20160921/</guid>
+      <description>&lt;p&gt;2016年9月21至22日，GMT中文社区协同中国地震局地震研究所和中国地震局地壳形变学科
+技术管理组举行了首次GMT线下培训活动。&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>GMT中文社区首次线下聚餐</title>
+      <link>https://gmt-china.org/blog/gud-20160628/</link>
+      <pubDate>Sat, 24 Sep 2016 00:00:00 +0000</pubDate>
+      
+      <guid>https://gmt-china.org/blog/gud-20160628/</guid>
+      <description>&lt;p&gt;2016年6月28日，GMT中文社区在北京举行了首次GMT用户线下聚餐（GMT User Dinner，简称GUD）。&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>GMT国内镜像正式建成</title>
+      <link>https://gmt-china.org/blog/mirror-site-founded/</link>
+      <pubDate>Fri, 08 Jul 2016 00:00:00 +0000</pubDate>
+      
+      <guid>https://gmt-china.org/blog/mirror-site-founded/</guid>
+      <description>经过本社区积极联系，GMT中国区镜像站点已于2016年7月6日正式建立，并已加入GMT官网镜像列表中。 镜像地址：http://mirrors</description>
+    </item>
+    
+    <item>
+      <title>GMT中文社区正式成立</title>
+      <link>https://gmt-china.org/blog/gmt-china-community-founded/</link>
+      <pubDate>Wed, 06 Apr 2016 00:00:00 +0000</pubDate>
+      
+      <guid>https://gmt-china.org/blog/gmt-china-community-founded/</guid>
+      <description>GMT的中文用户们，大家好，我是 seisman 。 GMT中文社区于今日正式成立了！ GMT中文社区是针对GMT中文用户而成立的社区。整个社区目前包含了三个主</description>
+    </item>
+    
+  </channel>
+</rss>

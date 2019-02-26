@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>地学数据 on GMT中文社区</title>
+    <link>https://gmt-china.org/categories/%E5%9C%B0%E5%AD%A6%E6%95%B0%E6%8D%AE/</link>
+    <description>Recent content in 地学数据 on GMT中文社区</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>&amp;copy; 2016–2019 GMT 中文社区</copyright>
+    <lastBuildDate>Sun, 15 Apr 2018 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="https://gmt-china.org/categories/%E5%9C%B0%E5%AD%A6%E6%95%B0%E6%8D%AE/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>2017版1:100万全国标准基础地理数据！你值得拥有</title>
+      <link>https://gmt-china.org/blog/national-geographic-database/</link>
+      <pubDate>Sun, 15 Apr 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://gmt-china.org/blog/national-geographic-database/</guid>
+      <description>&lt;p&gt;本文介绍国家标准地理数据的获取以及处理为 GMT 支持格式的方法。&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>GMT自带中国国界问题</title>
+      <link>https://gmt-china.org/blog/china-border-issues/</link>
+      <pubDate>Sat, 17 Mar 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://gmt-china.org/blog/china-border-issues/</guid>
+      <description>众所周知，中国与周边国家或地区之间存在领土争议，这是一个很敏感的政治问题。 对于地学相关的科研工作者而言，在正式出版的中外期刊上发表带有中国国</description>
+    </item>
+    
+  </channel>
+</rss>

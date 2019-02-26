@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>新闻动态 on GMT中文社区</title>
+    <link>https://gmt-china.org/categories/%E6%96%B0%E9%97%BB%E5%8A%A8%E6%80%81/</link>
+    <description>Recent content in 新闻动态 on GMT中文社区</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>&amp;copy; 2016–2019 GMT 中文社区</copyright>
+    <lastBuildDate>Tue, 17 Oct 2017 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="https://gmt-china.org/categories/%E6%96%B0%E9%97%BB%E5%8A%A8%E6%80%81/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>GMT 中文社区第三次线下聚餐</title>
+      <link>https://gmt-china.org/blog/gud-20171017/</link>
+      <pubDate>Tue, 17 Oct 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://gmt-china.org/blog/gud-20171017/</guid>
+      <description>金秋十月，秋高气爽，雁过留声。GMT 中文社区在北京成功举办了第三次线下聚餐活动。 2017 年 CGU 年会届时举行，全国同行汇集首都北京国际会议中心，我们借</description>
+    </item>
+    
+  </channel>
+</rss>

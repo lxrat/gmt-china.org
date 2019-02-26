@@ -1,0 +1,998 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="generator" content="Source Themes Academic 4.0.0">
+  <meta name="generator" content="Hugo 0.54.0" />
+
+  
+
+  
+  
+  
+  
+  
+    
+    
+    
+  
+  
+
+  <meta name="author" content="田冬冬">
+
+  
+  
+  
+    
+  
+  <meta name="description" content="震中位置数据 | 机制解数据 | 海拔数据 本文展示了如何同时绘制沿着垂直剖面的海拔变化图、地震分布及震源机制图。 Bash 绘图脚本如下: profile GMT6&#43;sh GMT5&#43;sh #!/bin/bash gmt begin profile png R=0/11/0/700 J=X5i/-2i">
+
+  
+  <link rel="alternate" hreflang="en-us" href="https://gmt-china.org/example/ex019/">
+
+  
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+  
+  <meta name="theme-color" content="#2962ff">
+  
+
+  
+  
+  
+  
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha256-eSi1q2PG6J7g7ib17yAaWMcrr5GrtohYChqibrV7PBE=" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/academicons/1.8.6/css/academicons.min.css" integrity="sha256-uFVgMKfistnJAfoCUQigIl+JfUaP47GrRKjf6CTPVmw=" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.0/css/all.css" integrity="sha384-aOkxzJ5uQz7WBObEZcHvV5JvRW3TUc2rNPA7pe3AwnsUohiw1Vj2Rgx2KSOkF5+h" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" integrity="sha256-ygkqlh3CYSUri3LhQxzdcm0n1EQvH2Y+U5S2idbLtxs=" crossorigin="anonymous">
+
+    
+    
+    
+      
+    
+    
+      
+      
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/solarized-light.min.css" crossorigin="anonymous">
+      
+    
+
+    
+
+    
+
+  
+
+  
+  
+  <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Montserrat:400,700|Roboto:400,400italic,700|Roboto+Mono">
+  
+
+  <link rel="stylesheet" href="/styles.css">
+  
+    
+    
+    
+    
+      
+    
+    
+    
+    <link rel="stylesheet" href="/css/academic.e9ae4c7a7e5d6720b3f65075ee43d374.css">
+  
+
+  
+  
+  
+
+  
+  <link rel="alternate" href="https://gmt-china.org/index.xml" type="application/rss+xml" title="GMT中文社区">
+  <link rel="feed" href="https://gmt-china.org/index.xml" type="application/rss+xml" title="GMT中文社区">
+  
+
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="icon" type="image/png" href="/img/icon.png">
+  <link rel="apple-touch-icon" type="image/png" href="/img/icon-192.png">
+
+  <link rel="canonical" href="https://gmt-china.org/example/ex019/">
+
+  
+  
+  
+  
+    
+    
+  
+  <meta property="twitter:card" content="summary">
+  
+  <meta property="og:site_name" content="GMT中文社区">
+  <meta property="og:url" content="https://gmt-china.org/example/ex019/">
+  <meta property="og:title" content="绘制含地形起伏的地震剖面图 | GMT中文社区">
+  <meta property="og:description" content="震中位置数据 | 机制解数据 | 海拔数据 本文展示了如何同时绘制沿着垂直剖面的海拔变化图、地震分布及震源机制图。 Bash 绘图脚本如下: profile GMT6&#43;sh GMT5&#43;sh #!/bin/bash gmt begin profile png R=0/11/0/700 J=X5i/-2i"><meta property="og:image" content="https://gmt-china.org/img/icon-192.png">
+  <meta property="og:locale" content="en-us">
+  
+  <meta property="article:published_time" content="2018-04-07T00:00:00&#43;00:00">
+  
+  <meta property="article:modified_time" content="2018-04-07T00:00:00&#43;00:00">
+  
+
+  
+
+  
+
+  <title>绘制含地形起伏的地震剖面图 | GMT中文社区</title>
+
+</head>
+<body id="top" data-spy="scroll" data-target="#TableOfContents" data-offset="71" >
+  <aside class="search-results" id="search">
+  <div class="container">
+    <section class="search-header">
+
+      <div class="row no-gutters justify-content-between mb-3">
+        <div class="col-6">
+          <h1>Search</h1>
+        </div>
+        <div class="col-6 col-search-close">
+          <a class="js-search" href="#"><i class="fas fa-times-circle text-muted" aria-hidden="true"></i></a>
+        </div>
+      </div>
+
+      <div id="search-box">
+        
+        <input name="q" id="search-query" placeholder="Search..." autocapitalize="off"
+        autocomplete="off" autocorrect="off" role="textbox" spellcheck="false" type="search">
+        
+      </div>
+
+    </section>
+    <section class="section-search-results">
+
+      <div id="search-hits">
+        
+      </div>
+
+    </section>
+  </div>
+</aside>
+
+
+<nav class="navbar navbar-light fixed-top navbar-expand-lg py-0" id="navbar-main">
+  <div class="container">
+
+    
+      <a class="navbar-brand" href="/">GMT中文社区</a>
+      
+      <button type="button" class="navbar-toggler" data-toggle="collapse"
+              data-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
+        <span><i class="fas fa-bars"></i></span>
+      </button>
+      
+
+    
+    <div class="collapse navbar-collapse" id="navbar">
+
+      
+      
+      <ul class="navbar-nav ml-auto">
+        
+
+        
+
+        
+        
+        
+
+        <li class="nav-item">
+          <a class="nav-link" href="/#">
+            
+            <span>首页</span>
+            
+          </a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link" href="/#download">
+            
+            <span>下载</span>
+            
+          </a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link" href="/#docs">
+            
+            <span>中文手册</span>
+            
+          </a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link" href="/#posts">
+            
+            <span>博客</span>
+            
+          </a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link" href="/gallery/">
+            
+            <span>图库</span>
+            
+          </a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link" href="/data/">
+            
+            <span>数据集</span>
+            
+          </a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link" href="/#people">
+            
+            <span>贡献者</span>
+            
+          </a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link" href="/#usermap">
+            
+            <span>用户分布</span>
+            
+          </a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link" href="/#contact">
+            
+            <span>联系我们</span>
+            
+          </a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link" href="/index.xml">
+            
+            <span><i class="fas fa-rss"></i></span>
+            
+          </a>
+        </li>
+
+        
+        
+
+      
+
+        
+
+        
+        <li class="nav-item">
+          <a class="nav-link js-search" href="#"><i class="fas fa-search" aria-hidden="true"></i></a>
+        </li>
+        
+
+        
+
+        
+        <li class="nav-item">
+          <a class="nav-link js-dark-toggle" href="#"><i class="fas fa-moon" aria-hidden="true"></i></a>
+        </li>
+        
+
+      </ul>
+
+    </div>
+  </div>
+</nav>
+
+
+<article class="article" itemscope itemtype="http://schema.org/Article">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+  
+  
+<div class="article-container pt-3">
+  <h1 itemprop="name">绘制含地形起伏的地震剖面图</h1>
+
+  
+
+  
+    
+
+
+
+<meta content="2018-04-07 00:00:00 &#43;0000 UTC" itemprop="datePublished">
+<meta content="2018-04-07 00:00:00 &#43;0000 UTC" itemprop="dateModified">
+
+<div class="article-metadata">
+
+  
+  
+  
+  
+  <div>
+    
+
+
+
+  <span itemscope itemprop="author" itemtype="http://schema.org/Person">
+      <span itemprop="name">
+        
+
+      
+      
+      <a href="/authors/seispider/">SeisPider</a></span></span>
+  
+
+
+
+  </div>
+  
+  
+
+  
+  <span class="article-date">
+    
+    
+      
+    
+    <time>2018年04月07日</time>
+  </span>
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+    
+<div class="share-box" aria-hidden="true">
+  <ul class="share">
+    <li>
+      <a class="twitter"
+         href="https://twitter.com/intent/tweet?text=%e7%bb%98%e5%88%b6%e5%90%ab%e5%9c%b0%e5%bd%a2%e8%b5%b7%e4%bc%8f%e7%9a%84%e5%9c%b0%e9%9c%87%e5%89%96%e9%9d%a2%e5%9b%be&amp;url=https%3a%2f%2fgmt-china.org%2fexample%2fex019%2f"
+         target="_blank" rel="noopener">
+        <i class="fab fa-twitter"></i>
+      </a>
+    </li>
+    <li>
+      <a class="facebook"
+         href="https://www.facebook.com/sharer.php?u=https%3a%2f%2fgmt-china.org%2fexample%2fex019%2f"
+         target="_blank" rel="noopener">
+        <i class="fab fa-facebook-f"></i>
+      </a>
+    </li>
+    <li>
+      <a class="linkedin"
+         href="https://www.linkedin.com/shareArticle?mini=true&amp;url=https%3a%2f%2fgmt-china.org%2fexample%2fex019%2f&amp;title=%e7%bb%98%e5%88%b6%e5%90%ab%e5%9c%b0%e5%bd%a2%e8%b5%b7%e4%bc%8f%e7%9a%84%e5%9c%b0%e9%9c%87%e5%89%96%e9%9d%a2%e5%9b%be"
+         target="_blank" rel="noopener">
+        <i class="fab fa-linkedin-in"></i>
+      </a>
+    </li>
+    <li>
+      <a class="weibo"
+         href="http://service.weibo.com/share/share.php?url=https%3a%2f%2fgmt-china.org%2fexample%2fex019%2f&amp;title=%e7%bb%98%e5%88%b6%e5%90%ab%e5%9c%b0%e5%bd%a2%e8%b5%b7%e4%bc%8f%e7%9a%84%e5%9c%b0%e9%9c%87%e5%89%96%e9%9d%a2%e5%9b%be"
+         target="_blank" rel="noopener">
+        <i class="fab fa-weibo"></i>
+      </a>
+    </li>
+    <li>
+      <a class="email"
+         href="mailto:?subject=%e7%bb%98%e5%88%b6%e5%90%ab%e5%9c%b0%e5%bd%a2%e8%b5%b7%e4%bc%8f%e7%9a%84%e5%9c%b0%e9%9c%87%e5%89%96%e9%9d%a2%e5%9b%be&amp;body=https%3a%2f%2fgmt-china.org%2fexample%2fex019%2f">
+        <i class="fas fa-envelope"></i>
+      </a>
+    </li>
+  </ul>
+</div>
+
+
+  
+
+</div>
+
+    
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+  
+</div>
+
+
+
+  <div class="article-container">
+
+    <div class="article-style" itemprop="articleBody">
+      <p><i class="fas fa-download"></i>
+<a href="/example/ex019/event.loc.info">震中位置数据</a> |
+<a href="/example/ex019/beachballs.info">机制解数据</a> |
+<a href="/example/ex019/elev.csv">海拔数据</a></p>
+
+<p>本文展示了如何同时绘制沿着垂直剖面的海拔变化图、地震分布及震源机制图。</p>
+
+<p>Bash 绘图脚本如下:</p>
+
+
+
+
+
+
+<ul class="nav nav-tabs">
+  <li class="nav-item gmt-code-tab disable"><i class="fas fa-code"></i> profile</li>
+  
+  
+  
+  
+  <li class="nav-item">
+      <a class="gmt-code-tab active" data-toggle="tab" href="#profile_GMT6_sh">GMT6+sh </a>
+  </li>
+  
+  
+  
+  <li class="nav-item">
+      <a class="gmt-code-tab " data-toggle="tab" href="#profile_GMT5_sh">GMT5+sh </a>
+  </li>
+  
+  
+</ul>
+
+<div class="tab-content">
+  
+  
+  
+  
+  <div class="tab-pane fade active show" id="profile_GMT6_sh">
+  <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh"><span style="color:#75715e">#!/bin/bash
+</span><span style="color:#75715e"></span>
+gmt begin profile png
+
+R<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>/11/0/700
+J<span style="color:#f92672">=</span>X5i/-2i
+
+eqfile<span style="color:#f92672">=</span>event.loc.info
+nearloc<span style="color:#f92672">=</span>near.loc
+beachballs<span style="color:#f92672">=</span>beachballs.info
+elev<span style="color:#f92672">=</span>elev.csv
+
+gmt set MAP_FRAME_TYPE plain MAP_FRAME_PEN <span style="color:#ae81ff">0</span>.4p
+gmt set FONT_TITLE 5p MAP_TITLE_OFFSET 8p
+gmt set MAP_ANNOT_OFFSET_PRIMARY 2p FONT_ANNOT_PRIMARY 12p,Times-Roman
+gmt set MAP_TICK_LENGTH_PRIMARY 3p FONT_LABEL 12p MAP_GRID_PEN_PRIMARY <span style="color:#ae81ff">0</span>.2p,gray,--
+gmt set FORMAT_GEO_MAP<span style="color:#f92672">=</span>ddd:mm:ssF
+
+<span style="color:#75715e"># 绘制底图</span>
+gmt basemap -R0/11/0/700 -JX5i/-2i -BWS -Bya200f100+l<span style="color:#e6db74">&#34;Focal depth (km)&#34;</span> -Bxa2f1+l<span style="color:#e6db74">&#34;Distance&#34;</span>+u<span style="color:#e6db74">&#34;\260&#34;</span>
+gmt basemap -BWSen
+
+<span style="color:#75715e"># 测线： (130.5,43.5)为起点，(142.5,36.5) 为终点</span>
+<span style="color:#75715e"># 筛选出距离测线+-1度以内的地震事件</span>
+gmt project $eqfile -C130.5/43.5 -E142.5/36.5 -Fxyzpq -W-1/1 &gt; $nearloc
+<span style="color:#75715e"># 分深度绘制地震</span>
+awk <span style="color:#e6db74">&#39;$4&gt;=0 &amp;&amp; $4&lt;70 {print $5,$4,$3*0.03}&#39;</span> $nearloc | gmt plot -Sc -Gpurple -W0.1p,black
+awk <span style="color:#e6db74">&#39;$4&gt;=70 &amp;&amp; $4&lt;300 {print $5,$4,$3*0.04}&#39;</span> $nearloc | gmt plot -Sc -Ggreen -W0.1p,black
+awk <span style="color:#e6db74">&#39;$4&gt;=300 &amp;&amp; $4&lt;1000 {print $5,$4,$3*0.05}&#39;</span> $nearloc | gmt plot -Sc -Gred -W0.1p,black
+
+<span style="color:#75715e"># 在剖面上绘制部分事件的震源机制</span>
+gmt coupe $beachballs -B -Q -L -Sd0.3 -Aa130.5/43.5/142.5/36.5/90/100/0/700f -Gblack
+
+<span style="color:#75715e"># 绘制图例</span>
+gmt legend -DjBR+w1.2i+l1.2+o0.05i/0.04i -F+g255+p1p <span style="color:#e6db74">&lt;&lt; EOF
+</span><span style="color:#e6db74">G 0.01i
+</span><span style="color:#e6db74">H 12 4 Event (M&gt;4)
+</span><span style="color:#e6db74">S 0.1i c 0.20 purple 0.1p,black 0.25i 0~70 km
+</span><span style="color:#e6db74">S 0.1i c 0.20 green 0.1p,black 0.25i 70~300 km
+</span><span style="color:#e6db74">S 0.1i c 0.20 red 0.1p,black 0.25i &gt;300 km
+</span><span style="color:#e6db74">EOF</span>
+
+<span style="color:#75715e"># 绘制海拔剖面</span>
+gmt basemap -R0/1300/-4000/2000 -JX5i/1i -Bya2000f1000+l<span style="color:#e6db74">&#34;Elevation (m)&#34;</span> -BW -Y2i
+<span style="color:#75715e"># 绘制剖面海拔</span>
+gmt plot $elev -W0.5p,black -Ggray
+<span style="color:#75715e"># 绘制块体分界线</span>
+gmt plot -W1p,black,- <span style="color:#e6db74">&lt;&lt; EOF
+</span><span style="color:#e6db74">&gt;
+</span><span style="color:#e6db74">102.7 -4000
+</span><span style="color:#e6db74">102.7  2000
+</span><span style="color:#e6db74">&gt;
+</span><span style="color:#e6db74">939 -4000
+</span><span style="color:#e6db74">939 2000
+</span><span style="color:#e6db74">&gt;
+</span><span style="color:#e6db74">1113 -4000
+</span><span style="color:#e6db74">1113 2000
+</span><span style="color:#e6db74">&gt;
+</span><span style="color:#e6db74">1300 -4000
+</span><span style="color:#e6db74">1300 2000
+</span><span style="color:#e6db74">EOF</span>
+gmt text -N -F+f16p,blue <span style="color:#e6db74">&lt;&lt; EOF
+</span><span style="color:#e6db74">0 3000 A
+</span><span style="color:#e6db74">1300 3000 B
+</span><span style="color:#e6db74">600 1800 SOJP
+</span><span style="color:#e6db74">1050 1800 JP
+</span><span style="color:#e6db74">1200 1800 WP
+</span><span style="color:#e6db74">EOF</span>
+gmt end</code></pre></div>
+  </div>
+  
+  
+  
+  <div class="tab-pane fade " id="profile_GMT5_sh">
+  <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh"><span style="color:#75715e">#!/bin/bash
+</span><span style="color:#75715e"></span>PS<span style="color:#f92672">=</span>profile.ps
+R<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>/11/0/700
+J<span style="color:#f92672">=</span>X5i/-2i
+
+eqfile<span style="color:#f92672">=</span>event.loc.info
+nearloc<span style="color:#f92672">=</span>near.loc
+beachballs<span style="color:#f92672">=</span>beachballs.info
+elev<span style="color:#f92672">=</span>elev.csv
+
+gmt set MAP_FRAME_TYPE plain MAP_FRAME_PEN <span style="color:#ae81ff">0</span>.4p
+gmt set FONT_TITLE 5p MAP_TITLE_OFFSET 8p
+gmt set MAP_ANNOT_OFFSET_PRIMARY 2p FONT_ANNOT_PRIMARY 12p,Times-Roman
+gmt set MAP_TICK_LENGTH_PRIMARY 3p FONT_LABEL 12p MAP_GRID_PEN_PRIMARY <span style="color:#ae81ff">0</span>.2p,gray,--
+gmt set FORMAT_GEO_MAP<span style="color:#f92672">=</span>ddd:mm:ssF
+
+<span style="color:#75715e"># 绘制底图</span>
+gmt psbasemap -R$R -J$J -Bya200f100+l<span style="color:#e6db74">&#34;Focal depth (km)&#34;</span> -Bxa2f1+l<span style="color:#e6db74">&#34;Distance&#34;</span>+u<span style="color:#e6db74">&#34;\260&#34;</span> -BWS -K &gt; $PS
+gmt psbasemap -R -J -B0 -Bne -O -K &gt;&gt; $PS
+
+<span style="color:#75715e"># 测线： (130.5,43.5)为起点，(142.5,36.5) 为终点</span>
+<span style="color:#75715e"># 筛选出距离测线+-1度以内的地震事件</span>
+gmt project $eqfile -C130.5/43.5 -E142.5/36.5 -Fxyzpq -W-1/1 &gt; $nearloc
+<span style="color:#75715e"># 分深度绘制地震</span>
+awk <span style="color:#e6db74">&#39;$4&gt;=0 &amp;&amp; $4&lt;70 {print $5,$4,$3*0.03}&#39;</span> $nearloc | <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>	                      gmt psxy -R -J -Sc -Gpurple -W0.1p,black -O -K &gt;&gt; $PS
+awk <span style="color:#e6db74">&#39;$4&gt;=70 &amp;&amp; $4&lt;300 {print $5,$4,$3*0.04}&#39;</span> $nearloc |<span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>                          gmt psxy -R -J -Sc -Ggreen -W0.1p,black -K -O &gt;&gt; $PS
+awk <span style="color:#e6db74">&#39;$4&gt;=300 &amp;&amp; $4&lt;1000 {print $5,$4,$3*0.05}&#39;</span> $nearloc |<span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>                          gmt psxy -R -J -Sc -Gred -W0.1p,black -O -K &gt;&gt; $PS
+
+<span style="color:#75715e"># 在剖面上绘制部分事件的震源机制</span>
+gmt pscoupe $beachballs -R -J -B -Q -L -Sd0.3 -Aa130.5/43.5/142.5/36.5/90/100/0/700f <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>                         -Gblack -O -K &gt;&gt; $PS
+
+<span style="color:#75715e"># 绘制图例</span>
+gmt pslegend -R -J -DjBR+w1.2i+l1.2+o0.05i/0.04i -F+g255+p0.25p -O -K &gt;&gt; $PS <span style="color:#e6db74">&lt;&lt; EOF
+</span><span style="color:#e6db74">G 0.01i
+</span><span style="color:#e6db74">H 12 4 Event (M&gt;4)
+</span><span style="color:#e6db74">S 0.1i c 0.20 purple 0.1p,black 0.25i 0~70 km
+</span><span style="color:#e6db74">S 0.1i c 0.20 green 0.1p,black 0.25i 70~300 km
+</span><span style="color:#e6db74">S 0.1i c 0.20 red 0.1p,black 0.25i &gt;300 km
+</span><span style="color:#e6db74">EOF</span>
+
+<span style="color:#75715e"># 绘制海拔剖面</span>
+elevR<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>/1300/-4000/2000
+elevJ<span style="color:#f92672">=</span>X5i/1i
+gmt psbasemap -R$elevR -J$elevJ -Bya2000f1000+l<span style="color:#e6db74">&#34;Elevation (m)&#34;</span> -Bx0 -BW -Y2i -O -K &gt;&gt; $PS
+
+<span style="color:#75715e"># 绘制剖面海拔</span>
+gmt psxy $elev -W0.5p,black -J -Ggray -R -O -K &gt;&gt; $PS
+<span style="color:#75715e"># 绘制块体分界线</span>
+gmt psxy -W1p,black,- -J -R -O -K &gt;&gt; $PS <span style="color:#e6db74">&lt;&lt;EOF
+</span><span style="color:#e6db74">&gt;
+</span><span style="color:#e6db74">102.7 -4000
+</span><span style="color:#e6db74">102.7  2000
+</span><span style="color:#e6db74">&gt;
+</span><span style="color:#e6db74">939 -4000
+</span><span style="color:#e6db74">939 2000
+</span><span style="color:#e6db74">&gt;
+</span><span style="color:#e6db74">1113 -4000
+</span><span style="color:#e6db74">1113 2000
+</span><span style="color:#e6db74">&gt;
+</span><span style="color:#e6db74">1300 -4000
+</span><span style="color:#e6db74">1300 2000
+</span><span style="color:#e6db74">EOF</span>
+gmt pstext -N -J -R -F+f16p,blue -O &gt;&gt; $PS <span style="color:#e6db74">&lt;&lt; EOF
+</span><span style="color:#e6db74">0 3000 A
+</span><span style="color:#e6db74">1300 3000 B
+</span><span style="color:#e6db74">600 1800 SOJP
+</span><span style="color:#e6db74">1050 1800 JP
+</span><span style="color:#e6db74">1200 1800 WP
+</span><span style="color:#e6db74">EOF</span>
+
+gmt psconvert $PS -A -Tg -E360 -P -Z
+rm gmt.*</code></pre></div>
+  </div>
+  
+  
+</div>
+
+
+<p>绘图效果如下:</p>
+
+
+
+
+<figure>
+
+<img src="/example/ex019/profile.png" width="800px" />
+
+
+
+<figcaption data-pre="Figure " data-post=":" >
+  <h4>剖面图绘制</h4>
+  
+</figcaption>
+
+</figure>
+
+    </div>
+
+    
+
+
+    
+      
+
+
+
+
+
+
+  
+  
+    
+  
+  
+
+
+
+
+
+
+
+      
+      
+    
+
+    
+    <div class="article-widget">
+      <div class="post-nav">
+  
+  <div class="post-nav-item">
+    <div class="meta-nav">Next</div>
+    <a href="https://gmt-china.org/example/ex020/" rel="next">绘制速度模型</a>
+  </div>
+  
+  
+  <div class="post-nav-item">
+    <div class="meta-nav">Previous</div>
+    <a href="https://gmt-china.org/example/ex017/" rel="prev">矢量及应力应变张量绘制</a>
+  </div>
+  
+</div>
+
+    </div>
+    
+
+    
+<section id="comments">
+  <div id="gitalk-container"></div>
+
+<link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+<script type="text/javascript">
+  var gitalk = new Gitalk({
+    clientID: '33c0af3846f5099c3375',
+    clientSecret: '89c589212198ac2c0967fe40719e404b269fab8a',
+    owner: 'gmt-china',
+    repo: 'gitalk',
+    admin: ['zhaozhiyuan1989','seisman','wangliang1989'],
+    body: location.href,
+  });
+  gitalk.render('gitalk-container');
+</script>
+
+</section>
+
+
+
+  </div>
+</article>
+
+<div class="container">
+  <footer class="site-footer">
+  
+
+  <p class="powered-by">
+    &copy; 2016–2019 GMT 中文社区 &middot; 
+
+    Powered by the
+    <a href="https://sourcethemes.com/academic/" target="_blank" rel="noopener">Academic theme</a> for
+    <a href="https://gohugo.io" target="_blank" rel="noopener">Hugo</a>.
+
+    
+    <span class="float-right" aria-hidden="true">
+      <a href="#" id="back_to_top">
+        <span class="button_icon">
+          <i class="fas fa-chevron-up fa-2x"></i>
+        </span>
+      </a>
+    </span>
+    
+  </p>
+</footer>
+
+</div>
+
+
+<div id="modal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Cite</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <pre><code class="tex hljs"></code></pre>
+      </div>
+      <div class="modal-footer">
+        <a class="btn btn-outline-primary my-1 js-copy-cite" href="#" target="_blank">
+          <i class="fas fa-copy"></i> Copy
+        </a>
+        <a class="btn btn-outline-primary my-1 js-download-cite" href="#" target="_blank">
+          <i class="fas fa-download"></i> Download
+        </a>
+        <div id="modal-error"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+    
+
+    
+    
+    
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha512-+NqPlbbtM1QqiK8ZAo4Yrj2c4lNQoGv8P79DPtKzj++l5jnN39rHA/xsqn8zE9l0uSoxaCdrOgFs6yjyfbBxSg==" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.imagesloaded/4.1.3/imagesloaded.pkgd.min.js" integrity="sha512-umsR78NN0D23AzgoZ11K7raBD+R6hqKojyBZs1w8WvYlsI+QuKRGBx3LFCwhatzBunCjDuJpDHwxD13sLMbpRA==" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha256-VsEqElsCHSGmnmHXGQzvoWjWwoznFSZc6hs7ARLRacQ=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.isotope/3.0.4/isotope.pkgd.min.js" integrity="sha512-VDBOIlDbuC4VWxGJNmuFRQ0Li0SKkDpmGyuhAG5LTDLd/dJ/S0WMVxriR2Y+CyPL5gzjpN4f/6iqWVBJlht0tQ==" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" integrity="sha256-X5PoE3KU5l+JcX+w09p/wHl9AzK333C4hJ2I9S5mD4M=" crossorigin="anonymous"></script>
+
+      
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js" integrity="sha256-/BfiIkHlHoVihZdc6TFuj7MmJ0TWcWsMXkeDFwhi0zw=" crossorigin="anonymous"></script>
+        
+        <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/dos.min.js"></script>
+        
+      
+
+      
+      
+    
+
+    
+    
+
+    
+    
+    
+
+    
+    
+    <script>hljs.initHighlightingOnLoad();</script>
+    
+
+    
+    
+    <script>
+      const search_index_filename = "/index.json";
+      const i18n = {
+        'placeholder': "Search...",
+        'results': "results found",
+        'no_results': "No results found"
+      };
+      const content_type = {
+        'post': "Posts",
+        'project': "Projects",
+        'publication' : "Publications",
+        'talk' : "Talks"
+        };
+    </script>
+    
+
+    
+    
+
+    
+    
+    <script id="search-hit-fuse-template" type="text/x-template">
+      <div class="search-hit" id="summary-{{key}}">
+      <div class="search-hit-content">
+        <div class="search-hit-name">
+          <a href="{{relpermalink}}">{{title}}</a>
+          <div class="article-metadata search-hit-type">{{type}}</div>
+          <p class="search-hit-description">{{snippet}}</p>
+        </div>
+      </div>
+      </div>
+    </script>
+    
+
+    
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.1/fuse.min.js" integrity="sha256-VzgmKYmhsGNNN4Ph1kMW+BjoYJM2jV5i4IlFoeZA9XI=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js" integrity="sha256-4HLtjeVgH0eIB3aZ9mLYF6E8oU5chNdjU6p6rrXpl9U=" crossorigin="anonymous"></script>
+    
+
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+      
+    
+    
+    
+    
+    <script src="/js/academic.min.db3d6f315d07c75ac150285a72ff5e1f.js"></script>
+
+  </body>
+</html>
+

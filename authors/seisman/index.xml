@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>seisman on GMT中文社区</title>
+    <link>https://gmt-china.org/authors/seisman/</link>
+    <description>Recent content in seisman on GMT中文社区</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>&amp;copy; 2016–2019 GMT 中文社区</copyright>
+    <lastBuildDate>Fri, 31 Aug 2018 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="https://gmt-china.org/authors/seisman/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title></title>
+      <link>https://gmt-china.org/author/seisman/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://gmt-china.org/author/seisman/</guid>
+      <description>GMT中文社区建立者，同时也是中文社区的主要维护者。</description>
+    </item>
+    
+    <item>
+      <title>GMT6 的安装: 正式推出前体验 GMT6</title>
+      <link>https://gmt-china.org/blog/install-gmt6/</link>
+      <pubDate>Fri, 31 Aug 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://gmt-china.org/blog/install-gmt6/</guid>
+      <description>&lt;p&gt;GMT6 计划于今年年底正式发布。GMT6 完全兼容 GMT5 并新增了更易用的现代模式，
+想要提前体验的可以按照如下说明安装 GMT6 的开发版。&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>GMT 各大版本间的差异</title>
+      <link>https://gmt-china.org/blog/gmt-versions/</link>
+      <pubDate>Sat, 07 Apr 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://gmt-china.org/blog/gmt-versions/</guid>
+      <description>GMT 目前存在如下几个大版本: GMT4：最新版本为 GMT 4.5.18，也是最终版本，已不再维护更新； GMT5：最新版本为 GMT 5.4.5，是目前的主流版</description>
+    </item>
+    
+    <item>
+      <title>GMT自带中国国界问题</title>
+      <link>https://gmt-china.org/blog/china-border-issues/</link>
+      <pubDate>Sat, 17 Mar 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://gmt-china.org/blog/china-border-issues/</guid>
+      <description>众所周知，中国与周边国家或地区之间存在领土争议，这是一个很敏感的政治问题。 对于地学相关的科研工作者而言，在正式出版的中外期刊上发表带有中国国</description>
+    </item>
+    
+    <item>
+      <title>GMT 中文社区第三次线下聚餐</title>
+      <link>https://gmt-china.org/blog/gud-20171017/</link>
+      <pubDate>Tue, 17 Oct 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://gmt-china.org/blog/gud-20171017/</guid>
+      <description>金秋十月，秋高气爽，雁过留声。GMT 中文社区在北京成功举办了第三次线下聚餐活动。 2017 年 CGU 年会届时举行，全国同行汇集首都北京国际会议中心，我们借</description>
+    </item>
+    
+    <item>
+      <title>GMT中文社区QQ群入群须知</title>
+      <link>https://gmt-china.org/blog/community-guide/</link>
+      <pubDate>Wed, 23 Aug 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://gmt-china.org/blog/community-guide/</guid>
+      <description>欢迎加入“地学GMT中文社区群”： 一群：218905582 (已满) 二群：791856541 GMT中文社区群是一个相对活跃且学术氛围浓厚的群。</description>
+    </item>
+    
+    <item>
+      <title>GDAL/OGR: 地理空间数据格式转换神器</title>
+      <link>https://gmt-china.org/blog/gdal-ogr/</link>
+      <pubDate>Mon, 07 Nov 2016 00:00:00 +0000</pubDate>
+      
+      <guid>https://gmt-china.org/blog/gdal-ogr/</guid>
+      <description>GDAL/OGR 是一个地理空间数据的格式转换及处理工具。 简介 官方主页: http://www.gdal.org GDAL/OGR 的核心分成两个部分： GDAL部分可以实现142种光栅/网格数据格式间的互相转换，</description>
+    </item>
+    
+    <item>
+      <title>绘制地球内部主要界面</title>
+      <link>https://gmt-china.org/example/ex002/</link>
+      <pubDate>Wed, 31 Aug 2016 00:00:00 +0000</pubDate>
+      
+      <guid>https://gmt-china.org/example/ex002/</guid>
+      <description>在利用地震波研究地球深部结构时，经常需要绘制震相在深度剖面下的射线路径， 同时也需要绘制地球内部的主要界面。 震相的射线路径可以用 TauP 提供的 taup_path 命令</description>
+    </item>
+    
+    <item>
+      <title>GMT中文社区正式成立</title>
+      <link>https://gmt-china.org/blog/gmt-china-community-founded/</link>
+      <pubDate>Wed, 06 Apr 2016 00:00:00 +0000</pubDate>
+      
+      <guid>https://gmt-china.org/blog/gmt-china-community-founded/</guid>
+      <description>GMT的中文用户们，大家好，我是 seisman 。 GMT中文社区于今日正式成立了！ GMT中文社区是针对GMT中文用户而成立的社区。整个社区目前包含了三个主</description>
+    </item>
+    
+  </channel>
+</rss>

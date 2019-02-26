@@ -1,0 +1,2374 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>GMT中文社区 on GMT中文社区</title>
+    <link>https://gmt-china.org/</link>
+    <description>Recent content in GMT中文社区 on GMT中文社区</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>&amp;copy; 2016–2019 GMT 中文社区</copyright>
+    <lastBuildDate>Sat, 16 Feb 2019 00:00:00 +0000</lastBuildDate>
+    <atom:link href="/" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>《流浪地球》之GMT绘制三维地形轨迹图</title>
+      <link>https://gmt-china.org/example/ex024/</link>
+      <pubDate>Sat, 16 Feb 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://gmt-china.org/example/ex024/</guid>
+      <description>
+
+&lt;p&gt;&lt;i class=&#34;fas fa-download&#34;&gt;&lt;/i&gt;
+&lt;a href=&#34;CN-border-La.dat&#34; target=&#34;_blank&#34;&gt;CN-border-La.dat&lt;/a&gt; |
+&lt;a href=&#34;truck.png&#34; target=&#34;_blank&#34;&gt;truck.png&lt;/a&gt; |
+&lt;a href=&#34;cloud.jpg&#34; target=&#34;_blank&#34;&gt;cloud.jpg&lt;/a&gt; |
+&lt;a href=&#34;land.png&#34; target=&#34;_blank&#34;&gt;land.png&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;论文Top区管理委温馨提示:&lt;/strong&gt;&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;软件千万种，精通某一种&lt;/p&gt;
+
+&lt;p&gt;作图不规范，毕业两行泪&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;随着《流浪地球》这一硬核科幻巨作的热播，众网友也是见仁见智纷纷从各自领域去
+考据其细节。热衷于作图的你们是否在一掠而过的镜头中发现了一个酷炫三维轨迹特效呢？
+就是这个⬇⬇⬇⬇&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://gmt-china.org/example/ex024/movie.gif&#34; alt=&#34;movie.gif&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;忽略这恢弘的风雪，我们可以把这个场景描述为“地形起伏叠加矢量区界限的行车轨迹三维图”。
+如果硬要加个难度值，那就是地形被真实地貌（冰雪）覆盖。&lt;/p&gt;
+
+&lt;p&gt;下面我们使用GMT来模拟这个场景，所用GMT模块包括：
+&lt;code&gt;grdcut&lt;/code&gt;，&lt;code&gt;grdfilter&lt;/code&gt;，&lt;code&gt;grdedit&lt;/code&gt;，&lt;code&gt;grdview&lt;/code&gt;，&lt;code&gt;grdtrack&lt;/code&gt;，
+&lt;code&gt;psxyz&lt;/code&gt;，&lt;code&gt;psxy&lt;/code&gt;，&lt;code&gt;pstext&lt;/code&gt;，&lt;code&gt;psimage&lt;/code&gt;&lt;/p&gt;
+
+
+
+
+
+
+&lt;ul class=&#34;nav nav-tabs&#34;&gt;
+  &lt;li class=&#34;nav-item gmt-code-tab disable&#34;&gt;&lt;i class=&#34;fas fa-code&#34;&gt;&lt;/i&gt; WanderingView&lt;/li&gt;
+  
+  
+  
+  
+  &lt;li class=&#34;nav-item&#34;&gt;
+      &lt;a class=&#34;gmt-code-tab active&#34; data-toggle=&#34;tab&#34; href=&#34;#WanderingView_GMT6_sh&#34;&gt;GMT6+sh &lt;/a&gt;
+  &lt;/li&gt;
+  
+  
+  
+  &lt;li class=&#34;nav-item&#34;&gt;
+      &lt;a class=&#34;gmt-code-tab &#34; data-toggle=&#34;tab&#34; href=&#34;#WanderingView_GMT6_bat&#34;&gt;GMT6+bat &lt;/a&gt;
+  &lt;/li&gt;
+  
+  
+  
+  &lt;li class=&#34;nav-item&#34;&gt;
+      &lt;a class=&#34;gmt-code-tab &#34; data-toggle=&#34;tab&#34; href=&#34;#WanderingView_GMT5_sh&#34;&gt;GMT5+sh &lt;/a&gt;
+  &lt;/li&gt;
+  
+  
+  
+  &lt;li class=&#34;nav-item&#34;&gt;
+      &lt;a class=&#34;gmt-code-tab &#34; data-toggle=&#34;tab&#34; href=&#34;#WanderingView_GMT5_bat&#34;&gt;GMT5+bat &lt;/a&gt;
+  &lt;/li&gt;
+  
+  
+&lt;/ul&gt;
+
+&lt;div class=&#34;tab-content&#34;&gt;
+  
+  
+  
+  
+  &lt;div class=&#34;tab-pane fade active show&#34; id=&#34;WanderingView_GMT6_sh&#34;&gt;
+  &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 三维地形轨迹图(真三维版)&lt;/span&gt;
+
+R&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;110&lt;/span&gt;/125/30/45
+J&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;M10c
+P&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;135&lt;/span&gt;/25
+
+gmt begin WanderingView png
+gmt set MAP_FRAME_TYPE plain
+
+&lt;span style=&#34;color:#75715e&#34;&gt;# 1. DEM数据获取&lt;/span&gt;
+&lt;span style=&#34;color:#75715e&#34;&gt;# earth_relief_01m.grd 可从https://mirrors.ustc.edu.cn/gmt/data/下载得到&lt;/span&gt;
+gmt grdcut @earth_relief_01m.grd -R%R% -Gtopo.grd
+
+&lt;span style=&#34;color:#75715e&#34;&gt;# 2. 中值滤波平滑地形，平滑直径50km&lt;/span&gt;
+gmt grdfilter topo.grd -Fm50 -D4 -Gtopo_filter.grd
+
+&lt;span style=&#34;color:#75715e&#34;&gt;# 3. 绘制三维地形，叠加jpg纹理。该句仅适用于GMT6，GMT5下需将jpg的RGB三波段分解再用&lt;/span&gt;
+gmt grdview topo_filter.grd -R%R%/-500/3000 -J%J% -JZ2c -Qi600 -I -Gcloud.jpg -p$P
+
+&lt;span style=&#34;color:#75715e&#34;&gt;# 4.在地形上叠加行政区界线，需要先grdtrack获取线条所在高程，再用plot3d画出。&lt;/span&gt;
+&lt;span style=&#34;color:#75715e&#34;&gt;# 政区边界在地图边缘被截断，为避免线条不连续，采用-g选项忽略经纬度跨度大于0.5°的点。&lt;/span&gt;
+gmt grdtrack -Gtopo_filter.grd CN-border-La.dat | gmt plot3d -JZ2c -W0.5p,white -p$P -N -gx0.5 -gy0.5
+
+&lt;span style=&#34;color:#75715e&#34;&gt;# 5.绘制行车轨迹（116.2°E,40.3°N）至（117°E,36°N）&lt;/span&gt;
+gmt grdtrack -Gtopo_filter.grd -E116.2/40.3/117/36+i10k | gmt plot3d -JZ2c -W2p,red -p$P
+
+&lt;span style=&#34;color:#75715e&#34;&gt;# 6.叠加起止点，五角星标识&lt;/span&gt;
+echo &lt;span style=&#34;color:#ae81ff&#34;&gt;116&lt;/span&gt;.2 &lt;span style=&#34;color:#ae81ff&#34;&gt;40&lt;/span&gt;.3 | gmt grdtrack -Gtopo_filter.grd | gmt plot3d -JZ2c -Sa0.5 -Gred -Wblack -p$P
+echo &lt;span style=&#34;color:#ae81ff&#34;&gt;116&lt;/span&gt;.33 &lt;span style=&#34;color:#ae81ff&#34;&gt;35&lt;/span&gt;.23 | gmt grdtrack -Gtopo_filter.grd | gmt plot3d -JZ2c -Sa0.5 -Gred -Wblack -p$P
+
+&lt;span style=&#34;color:#75715e&#34;&gt;# 7.插两个小旗子&lt;/span&gt;
+&lt;span style=&#34;color:#75715e&#34;&gt;# 因为GMT不支持三维符号(立方体和柱图除外)，所以这里是&amp;#34;伪三维&amp;#34;，在直角坐标系下手工确定二维符号位置&lt;/span&gt;
+echo &lt;span style=&#34;color:#ae81ff&#34;&gt;5&lt;/span&gt;.9 &lt;span style=&#34;color:#ae81ff&#34;&gt;3&lt;/span&gt;.2 | gmt plot -R0/10/0/10 -JX15c -SkLFLAG/1.5 -Gred -W0.8p
+echo &lt;span style=&#34;color:#ae81ff&#34;&gt;3&lt;/span&gt;.95 &lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;.2 | gmt plot -SkLFLAG/1.5 -Gred -W0.8p
+
+&lt;span style=&#34;color:#75715e&#34;&gt;# 8. 写文字标注,用同色轮廓线显示加粗效果&lt;/span&gt;
+echo &lt;span style=&#34;color:#ae81ff&#34;&gt;5&lt;/span&gt;.9 &lt;span style=&#34;color:#ae81ff&#34;&gt;3&lt;/span&gt;.2 北京 | gmt text -F+f8p,STFangsong-Light--UniGB-UTF8-H,red&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;.5p,red -Gwhite@50 -D-0.3c/0.2c
+echo &lt;span style=&#34;color:#ae81ff&#34;&gt;3&lt;/span&gt;.95 &lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;.2 济宁 | gmt text -F+f8p,STFangsong-Light--UniGB-UTF8-H,red&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;.5p,red -Gwhite@50 -D-0.3c/0.2c
+
+&lt;span style=&#34;color:#75715e&#34;&gt;# 9. 放个小车&lt;/span&gt;
+gmt image truck.png -Dg4.5/2.5+w0.8c+jCM
+
+gmt end&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+  &lt;/div&gt;
+  
+  
+  
+  &lt;div class=&#34;tab-pane fade &#34; id=&#34;WanderingView_GMT6_bat&#34;&gt;
+  &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bat&#34; data-lang=&#34;bat&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;REM 三维地形轨迹图(真三维版)&lt;/span&gt;
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;set&lt;/span&gt; R=110/125/30/45
+&lt;span style=&#34;color:#66d9ef&#34;&gt;set&lt;/span&gt; J=M10c
+&lt;span style=&#34;color:#66d9ef&#34;&gt;set&lt;/span&gt; P=135/25
+
+gmt begin
+gmt figure WanderingView png C-sFONTPATH=C:\windows\fonts
+gmt set MAP_FRAME_TYPE plain
+
+&lt;span style=&#34;color:#75715e&#34;&gt;REM 1. DEM数据获取&lt;/span&gt;
+&lt;span style=&#34;color:#75715e&#34;&gt;REM earth_relief_01m.grd 可从https://mirrors.ustc.edu.cn/gmt/data/下载得到&lt;/span&gt;
+gmt grdcut @earth_relief_01m.grd -R%R% -Gtopo.grd
+
+&lt;span style=&#34;color:#75715e&#34;&gt;REM 2. 中值滤波平滑地形，平滑直径50km&lt;/span&gt;
+gmt grdfilter topo.grd -Fm50 -D4 -Gtopo_filter.grd
+
+&lt;span style=&#34;color:#75715e&#34;&gt;REM 3. 绘制三维地形，叠加jpg纹理。该句仅适用于GMT6，GMT5下需将jpg的RGB三波段分解再用&lt;/span&gt;
+gmt grdview topo_filter.grd -R%R%/-500/3000 -J%J% -JZ2c -Qi600 -I -Gcloud.jpg -p%P%
+
+&lt;span style=&#34;color:#75715e&#34;&gt;REM 4.在地形上叠加行政区界线，需要先grdtrack获取线条所在高程，再用plot3d画出。&lt;/span&gt;
+&lt;span style=&#34;color:#75715e&#34;&gt;REM 政区边界在地图边缘被截断，为避免线条不连续，采用-g选项忽略经纬度跨度大于0.5°的点。&lt;/span&gt;
+gmt grdtrack -Gtopo_filter.grd CN-border-La.dat | gmt plot3d -JZ2c -W0.5p,white -p%P% -N -gx0.5 -gy0.5
+
+&lt;span style=&#34;color:#75715e&#34;&gt;REM 5.绘制行车轨迹（116.2°E,40.3°N）至（117°E,36°N）&lt;/span&gt;
+gmt grdtrack -Gtopo_filter.grd -E116.2/40.3/117/36+i10k | gmt plot3d -JZ2c -W2p,red -p%P%
+
+&lt;span style=&#34;color:#75715e&#34;&gt;REM 6.叠加起止点，五角星标识&lt;/span&gt;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;echo&lt;/span&gt; 116.2 40.3 | gmt grdtrack -Gtopo_filter.grd | gmt plot3d -JZ2c -Sa0.5 -Gred -Wblack -p%P%
+&lt;span style=&#34;color:#66d9ef&#34;&gt;echo&lt;/span&gt; 116.33 35.23 | gmt grdtrack -Gtopo_filter.grd | gmt plot3d -JZ2c -Sa0.5 -Gred -Wblack -p%P%
+
+&lt;span style=&#34;color:#75715e&#34;&gt;REM 7.插两个小旗子&lt;/span&gt;
+&lt;span style=&#34;color:#75715e&#34;&gt;REM 因为GMT不支持三维符号(立方体和柱图除外)，所以这里是&amp;#34;伪三维&amp;#34;，在直角坐标系下手工确定二维符号位置&lt;/span&gt;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;echo&lt;/span&gt; 5.9 3.2 | gmt plot -R0/10/0/10 -JX15c -SkLFLAG/1.5 -Gred -W0.8p
+&lt;span style=&#34;color:#66d9ef&#34;&gt;echo&lt;/span&gt; 3.95 2.2 | gmt plot -SkLFLAG/1.5 -Gred -W0.8p
+
+&lt;span style=&#34;color:#75715e&#34;&gt;REM 8. 写文字标注,用同色轮廓线显示加粗效果&lt;/span&gt;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;echo&lt;/span&gt; 5.9 3.2 北京 | gmt text -F+f8p,STFangsong-Light--GB-EUC-H,red=0.5p,red -Gwhite@50 -D-0.3c/0.2c
+&lt;span style=&#34;color:#66d9ef&#34;&gt;echo&lt;/span&gt; 3.95 2.2 济宁 | gmt text -F+f8p,STFangsong-Light--GB-EUC-H,red=0.5p,red -Gwhite@50 -D-0.3c/0.2c
+
+&lt;span style=&#34;color:#75715e&#34;&gt;REM 9. 放个小车&lt;/span&gt;
+gmt image truck.png -Dg4.5/2.5+w0.8c+jCM
+
+gmt end&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+  &lt;/div&gt;
+  
+  
+  
+  &lt;div class=&#34;tab-pane fade &#34; id=&#34;WanderingView_GMT5_sh&#34;&gt;
+  &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 三维地形轨迹图(真三维版)&lt;/span&gt;
+
+R&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;110&lt;/span&gt;/125/30/45
+J&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;M10c
+P&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;135&lt;/span&gt;/25
+PS&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;WanderingView.ps
+
+gmt set MAP_FRAME_TYPE plain
+
+&lt;span style=&#34;color:#75715e&#34;&gt;# 1. DEM数据获取及光照梯度计算&lt;/span&gt;
+&lt;span style=&#34;color:#75715e&#34;&gt;# earth_relief_01m.grd 可从https://mirrors.ustc.edu.cn/gmt/data/下载得到&lt;/span&gt;
+gmt grdcut @earth_relief_01m.grd -R$R -Gtopo.grd
+&lt;span style=&#34;color:#75715e&#34;&gt;# 中值滤波平滑地形，平滑直径50km&lt;/span&gt;
+gmt grdfilter topo.grd -Fm50 -D4 -Gtopo_filter.grd
+
+&lt;span style=&#34;color:#75715e&#34;&gt;# 2. 纹理图像分解为rgb三波段&lt;/span&gt;
+&lt;span style=&#34;color:#75715e&#34;&gt;# 此处需要GDAL支持，具体参考https://gmt-china.org/blog/gdal-ogr/&lt;/span&gt;
+gdal_translate -of GMT cloud.jpg -b &lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt; cloud_r.nc
+gdal_translate -of GMT cloud.jpg -b &lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt; cloud_g.nc
+gdal_translate -of GMT cloud.jpg -b &lt;span style=&#34;color:#ae81ff&#34;&gt;3&lt;/span&gt; cloud_b.nc
+
+&lt;span style=&#34;color:#75715e&#34;&gt;# 3. 纹理图像添加空间坐标信息&lt;/span&gt;
+gmt grdedit cloud_r.nc -fg -R$R
+gmt grdedit cloud_g.nc -fg -R$R
+gmt grdedit cloud_b.nc -fg -R$R
+
+&lt;span style=&#34;color:#75715e&#34;&gt;# 4. 绘制三维地形，叠加jpg纹理&lt;/span&gt;
+gmt grdview topo_filter.grd -R$R/-500/3000 -J$J -JZ2c -Qi600 -I -Gcloud_r.nc -Gcloud_g.nc -Gcloud_b.nc -p$P -K &amp;gt; $PS
+
+&lt;span style=&#34;color:#75715e&#34;&gt;# 5.在地形上叠加行政区界线，需要先grdtrack获取线条所在高程，再用psxyz画出。&lt;/span&gt;
+&lt;span style=&#34;color:#75715e&#34;&gt;# 政区边界在地图边缘被截断，为避免线条不连续，采用-g选项忽略经纬度跨度大于0.5°的点。&lt;/span&gt;
+gmt grdtrack -Gtopo_filter.grd CN-border-La.dat | gmt psxyz -R -J -JZ2c -W0.5p,white -p$P -O -K -N -gx0.5 -gy0.5&amp;gt;&amp;gt; $PS
+
+&lt;span style=&#34;color:#75715e&#34;&gt;# 6.绘制行车轨迹（116.2°E,40.3°N）至（117°E,36°N）&lt;/span&gt;
+gmt grdtrack -Gtopo_filter.grd -E116.2/40.3/117/36+i10k | gmt psxyz -R -J -JZ2c -W2p,red -p$P -O -K &amp;gt;&amp;gt; $PS
+
+&lt;span style=&#34;color:#75715e&#34;&gt;# 7.叠加起止点，五角星标识&lt;/span&gt;
+echo &lt;span style=&#34;color:#ae81ff&#34;&gt;116&lt;/span&gt;.2 &lt;span style=&#34;color:#ae81ff&#34;&gt;40&lt;/span&gt;.3 | gmt grdtrack -Gtopo_filter.grd | gmt psxyz -R -J -JZ2c -Sa0.5 -Gred -Wblack -p$P -K -O &amp;gt;&amp;gt; $PS
+echo &lt;span style=&#34;color:#ae81ff&#34;&gt;116&lt;/span&gt;.33 &lt;span style=&#34;color:#ae81ff&#34;&gt;35&lt;/span&gt;.23 | gmt grdtrack -Gtopo_filter.grd | gmt psxyz -R -J -JZ2c -Sa0.5 -Gred -Wblack -p$P -K -O &amp;gt;&amp;gt; $PS
+
+&lt;span style=&#34;color:#75715e&#34;&gt;# 8.插两个小旗子&lt;/span&gt;
+&lt;span style=&#34;color:#75715e&#34;&gt;# 因为GMT不支持三维符号(立方体和柱图除外)，所以这里是&amp;#34;伪三维&amp;#34;，在直角坐标系下手工确定二维符号位置&lt;/span&gt;
+echo &lt;span style=&#34;color:#ae81ff&#34;&gt;5&lt;/span&gt;.9 &lt;span style=&#34;color:#ae81ff&#34;&gt;3&lt;/span&gt;.2 | gmt psxy -R0/10/0/10 -JX15c -SkLFLAG/1.5 -Gred -W0.8p -O -K &amp;gt;&amp;gt; $PS
+echo &lt;span style=&#34;color:#ae81ff&#34;&gt;3&lt;/span&gt;.95 &lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;.2 | gmt psxy -R0/10/0/10 -JX15c -SkLFLAG/1.5 -Gred -W0.8p -O -K &amp;gt;&amp;gt; $PS
+
+&lt;span style=&#34;color:#75715e&#34;&gt;# 9. 写文字标注,用同色轮廓线显示加粗效果&lt;/span&gt;
+echo &lt;span style=&#34;color:#ae81ff&#34;&gt;5&lt;/span&gt;.9 &lt;span style=&#34;color:#ae81ff&#34;&gt;3&lt;/span&gt;.2 北京 | gmt pstext -R -J -F+f8p,STFangsong-Light--UniGB-UTF8-H,red&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;.5p,red -Gwhite@50 -D-0.3c/0.2c -O -K &amp;gt;&amp;gt; $PS
+echo &lt;span style=&#34;color:#ae81ff&#34;&gt;3&lt;/span&gt;.95 &lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;.2 济宁 | gmt pstext -R -J -F+f8p,STFangsong-Light--UniGB-UTF8-H,red&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;.5p,red -Gwhite@50 -D-0.3c/0.2c -O -K &amp;gt;&amp;gt; $PS
+
+&lt;span style=&#34;color:#75715e&#34;&gt;# 10. 放个小车&lt;/span&gt;
+gmt psimage truck.png -R -J -Dg4.5/2.5+w0.8c+jCM -O -K &amp;gt;&amp;gt; $PS
+
+gmt psxy -R -J -O -T &amp;gt;&amp;gt; $PS
+gmt psconvert $PS -Tg -P -Au
+
+rm cloud_*.* gmt.*&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+  &lt;/div&gt;
+  
+  
+  
+  &lt;div class=&#34;tab-pane fade &#34; id=&#34;WanderingView_GMT5_bat&#34;&gt;
+  &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-bat&#34; data-lang=&#34;bat&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;REM 三维地形轨迹图(真三维版)&lt;/span&gt;
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;set&lt;/span&gt; R=110/125/30/45
+&lt;span style=&#34;color:#66d9ef&#34;&gt;set&lt;/span&gt; J=M10c
+&lt;span style=&#34;color:#66d9ef&#34;&gt;set&lt;/span&gt; P=135/25
+&lt;span style=&#34;color:#66d9ef&#34;&gt;set&lt;/span&gt; PS=WanderingView.ps
+
+gmt set MAP_FRAME_TYPE plain
+
+&lt;span style=&#34;color:#75715e&#34;&gt;REM 1. DEM数据获取及光照梯度计算&lt;/span&gt;
+&lt;span style=&#34;color:#75715e&#34;&gt;REM earth_relief_01m.grd 可从https://mirrors.ustc.edu.cn/gmt/data/下载得到&lt;/span&gt;
+gmt grdcut @earth_relief_01m.grd -R%R% -Gtopo.grd
+&lt;span style=&#34;color:#75715e&#34;&gt;REM 中值滤波平滑地形，平滑直径50km&lt;/span&gt;
+gmt grdfilter topo.grd -Fm50 -D4 -Gtopo_filter.grd
+
+&lt;span style=&#34;color:#75715e&#34;&gt;REM 2. 纹理图像分解为rgb三波段&lt;/span&gt;
+&lt;span style=&#34;color:#75715e&#34;&gt;REM 此处需要GDAL支持，具体参考https://gmt-china.org/blog/gdal-ogr/&lt;/span&gt;
+gdal_translate -of GMT cloud.jpg -b 1 cloud_r.nc
+gdal_translate -of GMT cloud.jpg -b 2 cloud_g.nc
+gdal_translate -of GMT cloud.jpg -b 3 cloud_b.nc
+
+&lt;span style=&#34;color:#75715e&#34;&gt;REM 3. 纹理图像添加空间坐标信息&lt;/span&gt;
+gmt grdedit cloud_r.nc -fg -R%R%
+gmt grdedit cloud_g.nc -fg -R%R%
+gmt grdedit cloud_b.nc -fg -R%R%
+
+&lt;span style=&#34;color:#75715e&#34;&gt;REM 4. 绘制三维地形，叠加jpg纹理&lt;/span&gt;
+gmt grdview topo_filter.grd -R%R%/-500/3000 -J%J% -JZ2c -Qi600 -I -Gcloud_r.nc -Gcloud_g.nc -Gcloud_b.nc -p%P% -K &amp;gt; %PS%
+
+&lt;span style=&#34;color:#75715e&#34;&gt;REM 5.在地形上叠加行政区界线，需要先grdtrack获取线条所在高程，再用psxyz画出。&lt;/span&gt;
+&lt;span style=&#34;color:#75715e&#34;&gt;REM 政区边界在地图边缘被截断，为避免线条不连续，采用-g选项忽略经纬度跨度大于0.5°的点。&lt;/span&gt;
+gmt grdtrack -Gtopo_filter.grd CN-border-La.dat | gmt psxyz -R -J -JZ2c -W0.5p,white -p%P% -O -K -N -gx0.5 -gy0.5&amp;gt;&amp;gt; %PS%
+
+&lt;span style=&#34;color:#75715e&#34;&gt;REM 6.绘制行车轨迹（116.2°E,40.3°N）至（117°E,36°N）&lt;/span&gt;
+gmt grdtrack -Gtopo_filter.grd -E116.2/40.3/117/36+i10k | gmt psxyz -R -J -JZ2c -W2p,red -p%P% -O -K &amp;gt;&amp;gt; %PS%
+
+&lt;span style=&#34;color:#75715e&#34;&gt;REM 7.叠加起止点，五角星标识&lt;/span&gt;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;echo&lt;/span&gt; 116.2 40.3 | gmt grdtrack -Gtopo_filter.grd | gmt psxyz -R -J -JZ2c -Sa0.5 -Gred -Wblack -p%P% -K -O &amp;gt;&amp;gt; %PS%
+&lt;span style=&#34;color:#66d9ef&#34;&gt;echo&lt;/span&gt; 116.33 35.23 | gmt grdtrack -Gtopo_filter.grd | gmt psxyz -R -J -JZ2c -Sa0.5 -Gred -Wblack -p%P% -K -O &amp;gt;&amp;gt; %PS%
+
+&lt;span style=&#34;color:#75715e&#34;&gt;REM 8.插两个小旗子&lt;/span&gt;
+&lt;span style=&#34;color:#75715e&#34;&gt;REM 因为GMT不支持三维符号(立方体和柱图除外)，所以这里是&amp;#34;伪三维&amp;#34;，在直角坐标系下手工确定二维符号位置&lt;/span&gt;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;echo&lt;/span&gt; 5.9 3.2 | gmt psxy -R0/10/0/10 -JX15c -SkLFLAG/1.5 -Gred -W0.8p -O -K &amp;gt;&amp;gt; %PS%
+&lt;span style=&#34;color:#66d9ef&#34;&gt;echo&lt;/span&gt; 3.95 2.2 | gmt psxy -R0/10/0/10 -JX15c -SkLFLAG/1.5 -Gred -W0.8p -O -K &amp;gt;&amp;gt; %PS%
+
+&lt;span style=&#34;color:#75715e&#34;&gt;REM 9. 写文字标注,用同色轮廓线显示加粗效果&lt;/span&gt;
+&lt;span style=&#34;color:#66d9ef&#34;&gt;echo&lt;/span&gt; 5.9 3.2 北京 | gmt pstext -R -J -F+f8p,STFangsong-Light--GB-EUC-H,red=0.5p,red -Gwhite@50 -D-0.3c/0.2c -O -K &amp;gt;&amp;gt; %PS%
+&lt;span style=&#34;color:#66d9ef&#34;&gt;echo&lt;/span&gt; 3.95 2.2 济宁 | gmt pstext -R -J -F+f8p,STFangsong-Light--GB-EUC-H,red=0.5p,red -Gwhite@50 -D-0.3c/0.2c -O -K &amp;gt;&amp;gt; %PS%
+
+&lt;span style=&#34;color:#75715e&#34;&gt;REM 10. 放个小车&lt;/span&gt;
+gmt psimage truck.png -R -J -Dg4.5/2.5+w0.8c+jCM -O -K &amp;gt;&amp;gt; %PS%
+
+gmt psxy -R -J -O -T &amp;gt;&amp;gt; %PS%
+gmt psconvert %PS% -Tg -P -A -C-sFONTPATH=C:\windows\fonts
+
+&lt;span style=&#34;color:#66d9ef&#34;&gt;del&lt;/span&gt; cloud_*.*
+&lt;span style=&#34;color:#66d9ef&#34;&gt;del&lt;/span&gt; gmt.*&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+  &lt;/div&gt;
+  
+  
+&lt;/div&gt;
+
+
+&lt;p&gt;成图效果：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://gmt-china.org/example/ex024/WanderingView.jpg&#34; alt=&#34;风雪图&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;为了模拟风雪场景，上图选了一张神之模糊的云海图（cloud.jpg）作为地貌纹理。使用卫星影像（land.png）替代上文，成图效果如下：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://gmt-china.org/example/ex024/WanderingLand.jpg&#34; alt=&#34;卫星图&#34; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;延展&#34;&gt;延展：&lt;/h2&gt;
+
+&lt;p&gt;将不同视角的图片制作为gif，就可以做出三维漫游的效果。具体可参考
+&lt;a href=&#34;http://gmt.soest.hawaii.edu/doc/5.4.5/gallery/anim04.html#anim-04&#34; target=&#34;_blank&#34;&gt;gallery/anim04&lt;/a&gt;。
+如有兴趣，欢迎来稿探讨，先放一张效果图抛砖引玉。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://gmt-china.org/example/ex024/anim.gif&#34; alt=&#34;anim&#34; /&gt;&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>绘制图中图</title>
+      <link>https://gmt-china.org/example/ex023/</link>
+      <pubDate>Wed, 23 Jan 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://gmt-china.org/example/ex023/</guid>
+      <description>&lt;p&gt;如果绘制的地图区域范围很小，读者可能不清楚所画区域的位置。
+这时，往往需要在地图的一角，绘制一个图中图表示区域的位置。&lt;/p&gt;
+
+&lt;p&gt;解决这个问题的整体思路应该是在原图的合适位置画出一个底图，然后在这个新底图上绘图。
+要实现这个思路，有几个问题需要解决：&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;把新底图放到原图的正确位置&lt;/li&gt;
+&lt;li&gt;新底图上的绘图命令必须要能知道新底图的位置信息&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;gmt 的 psbasemap 模块可以实现这一个需求。
+绘图脚本：&lt;/p&gt;
+
+
+
+
+
+
+&lt;ul class=&#34;nav nav-tabs&#34;&gt;
+  &lt;li class=&#34;nav-item gmt-code-tab disable&#34;&gt;&lt;i class=&#34;fas fa-code&#34;&gt;&lt;/i&gt; draw-inset-map&lt;/li&gt;
+  
+  
+  
+  
+  &lt;li class=&#34;nav-item&#34;&gt;
+      &lt;a class=&#34;gmt-code-tab active&#34; data-toggle=&#34;tab&#34; href=&#34;#draw-inset-map_GMT5_sh&#34;&gt;GMT5+sh &lt;/a&gt;
+  &lt;/li&gt;
+  
+  
+&lt;/ul&gt;
+
+&lt;div class=&#34;tab-content&#34;&gt;
+  
+  
+  
+  
+  &lt;div class=&#34;tab-pane fade active show&#34; id=&#34;draw-inset-map_GMT5_sh&#34;&gt;
+  &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#!/bin/bash
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;
+PS&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;draw-inset-map.ps
+R&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;139&lt;/span&gt;.2E/140.5E/34.8N/36N
+gmt pscoast -R$R -JM18c -Baf -BWSne -Df -W2p -A1000 -Glightbrown -Sazure1 --FORMAT_GEO_MAP&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;dddF -P -K &amp;gt; $PS
+gmt psbasemap -R -J -DjTL+w6c/7c+o0.2c/0.2c+stmp -F+gwhite+p1p+c0.1c+s -O -K &amp;gt;&amp;gt; $PS
+
+read x0 y0 w h &amp;lt; tmp
+&lt;span style=&#34;color:#75715e&#34;&gt;# x0 和 y0 是图中图左下角的坐标&lt;/span&gt;
+&lt;span style=&#34;color:#75715e&#34;&gt;# w 是图中图的宽度&lt;/span&gt;
+&lt;span style=&#34;color:#75715e&#34;&gt;# h 是图中图的高度&lt;/span&gt;
+gmt pscoast -R129E/146E/30N/46N -JM$w -Df -W1p -A1000 -Glightbrown -Sazure1 -K -O -X$x0 -Y$y0 &amp;gt;&amp;gt; $PS
+gmt psbasemap -R -J -D$R -F+p2p,blue -O &amp;gt;&amp;gt; $PS
+gmt psconvert $PS -A -Tg
+rm tmp gmt.history $PS&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+  &lt;/div&gt;
+  
+  
+&lt;/div&gt;
+
+
+&lt;p&gt;绘图效果如下:&lt;/p&gt;
+
+
+
+
+&lt;figure&gt;
+
+&lt;img src=&#34;https://gmt-china.org/example/ex023/draw-inset-map.png&#34; width=&#34;1000px&#34; /&gt;
+
+
+
+&lt;figcaption data-pre=&#34;Figure &#34; data-post=&#34;:&#34; &gt;
+  &lt;h4&gt;东京湾&lt;/h4&gt;
+  
+&lt;/figcaption&gt;
+
+&lt;/figure&gt;
+
+&lt;p&gt;psbasemap 就是在地图上绘制一个新底图（map inset box）。
+-D 选项就是指定新底图的位置，并输出新底图的位置信息，以便后续的命令能获得。
+-F 选项则是为这个新底图绘制一个矩形的边界（使用 -D 选项后就必须使用 -F 选项）。
+下面说明脚本中这两个选项的具体含义。&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;-DjTL+w6c/7c+o0.2c/0.2c+stmp&lt;/code&gt;&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;code&gt;-DjTL&lt;/code&gt; 定义的是图框放置的位置。TL 表示顶部的左边。
+具体请读者了解 &lt;a href=&#34;https://docs.gmt-china.org/latest/basic/embellishments/#id2&#34; target=&#34;_blank&#34;&gt;gmt 的定位概念&lt;/a&gt;。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;+w6c/7c&lt;/code&gt; 表示图框的大小为 6 厘米乘以 7 厘米。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;+o0.2c/0.2i&lt;/code&gt; 设置图框水平偏离 0.2c，垂直偏离 0.2c。&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;+stmp&lt;/code&gt;，把图中图的左下角的位置和尺寸输出到文件 tmp 中。后面绘制大地图需要使用其中的参数。&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;&lt;code&gt;-F+gwhite+p1p+c0.1c+s&lt;/code&gt;&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;+gwhite表示填充白色&lt;/li&gt;
+&lt;li&gt;+p1p设置画笔的宽度为1p&lt;/li&gt;
+&lt;li&gt;+c0.1c是图中图中的图形和边框之间的空隙间隔。&lt;/li&gt;
+&lt;li&gt;+s绘制阴影&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;图中图内的内容就用 gmt 相应的模块绘制就是，和平时唯一的差别就是要根据 -D 选项输出的位置信息进行调整。&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>地球化学三角图解的绘制</title>
+      <link>https://gmt-china.org/example/ex022/</link>
+      <pubDate>Tue, 22 Jan 2019 00:00:00 +0000</pubDate>
+      
+      <guid>https://gmt-china.org/example/ex022/</guid>
+      <description>
+
+&lt;p&gt;&lt;i class=&#34;fas fa-download&#34;&gt;&lt;/i&gt;
+&lt;a href=&#34;https://gmt-china.org/example/ex022/ternary.csv&#34;&gt;三角图解文件&lt;/a&gt; |
+&lt;a href=&#34;https://gmt-china.org/example/ex022/Th-Sc-La.txt&#34;&gt;曲线坐标数据&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;三角图解有很多种，这里仅讨论一下地球化学上常用的地球化学图解用 GMT 的实现方法。
+该三角图解引自Mukul R. Bhatia &amp;amp; Keith A.W. Crook, 1986, Contrib Mineral Petrol。原图如下：&lt;/p&gt;
+
+
+
+
+&lt;figure&gt;
+
+&lt;img src=&#34;https://gmt-china.org/example/ex022/Bhatia-Crool1988.png&#34; width=&#34;400px&#34; /&gt;
+
+
+
+&lt;figcaption data-pre=&#34;Figure &#34; data-post=&#34;:&#34; &gt;
+  &lt;h4&gt;Th,Sc,La三角图解&lt;/h4&gt;
+  
+&lt;/figcaption&gt;
+
+&lt;/figure&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;三个端元值分别为 Th、Sc 和 La含量经归一化后的值，即将三元素含量换算成各自占三者的百分含量。
+以元素 Th 为例，Th&amp;rsquo;=100*Th/(Th+Sc+La)，Sc 及 La 计算方法相同。&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;A，B，C，D 分别代表不同的大地构造环境，A-大洋岛弧，B-大陆岛弧，C-活动大陆边缘，D-被动大陆边缘&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h1 id=&#34;实现三角框架和数据投点&#34;&gt;实现三角框架和数据投点&lt;/h1&gt;
+
+&lt;p&gt;psternary 模块可以实现三角框架和数据投点，代码如下：&lt;/p&gt;
+
+
+
+
+
+
+&lt;ul class=&#34;nav nav-tabs&#34;&gt;
+  &lt;li class=&#34;nav-item gmt-code-tab disable&#34;&gt;&lt;i class=&#34;fas fa-code&#34;&gt;&lt;/i&gt; ternary&lt;/li&gt;
+  
+  
+  
+  
+  &lt;li class=&#34;nav-item&#34;&gt;
+      &lt;a class=&#34;gmt-code-tab active&#34; data-toggle=&#34;tab&#34; href=&#34;#ternary_GMT5_sh&#34;&gt;GMT5+sh &lt;/a&gt;
+  &lt;/li&gt;
+  
+  
+&lt;/ul&gt;
+
+&lt;div class=&#34;tab-content&#34;&gt;
+  
+  
+  
+  
+  &lt;div class=&#34;tab-pane fade active show&#34; id=&#34;ternary_GMT5_sh&#34;&gt;
+  &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#!/bin/bash
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;R&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;/100/0/100/0/100
+J&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;X8c
+PS&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;ternary.ps
+data&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;ternary.csv         &lt;span style=&#34;color:#75715e&#34;&gt;# 数据文件&lt;/span&gt;
+Th&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;1&lt;/span&gt;; Sc&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt;; La&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;3&lt;/span&gt;; Zr&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;4&lt;/span&gt;; Co&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;5&lt;/span&gt;  &lt;span style=&#34;color:#75715e&#34;&gt;# 数据所在表格列号&lt;/span&gt;
+color&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;6&lt;/span&gt;  &lt;span style=&#34;color:#75715e&#34;&gt;# 颜色所在的列号&lt;/span&gt;
+symbol&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;7&lt;/span&gt; &lt;span style=&#34;color:#75715e&#34;&gt;# 符号所在的列号&lt;/span&gt;
+
+&lt;span style=&#34;color:#75715e&#34;&gt;# cpt&lt;/span&gt;
+cat &amp;gt; color.cpt &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;lt;&amp;lt; EOF
+&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;1 red  2 red
+&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;2 blue 3 blue
+&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;3 green 4 green
+&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;4 brown 5 brown
+&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;EOF&lt;/span&gt;
+
+gmt set PS_CHAR_ENCODING Standard+
+gmt set PS_PAGE_ORIENTATION landscape
+gmt set FONT_LABEL &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; 10p,4 &lt;span style=&#34;color:#75715e&#34;&gt;# 坐标轴标签&lt;/span&gt;
+gmt set MAP_FRAME_PEN &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;.3p &lt;span style=&#34;color:#75715e&#34;&gt;# 图框宽度&lt;/span&gt;
+gmt set MAP_LABEL_OFFSET &lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt; 2p &lt;span style=&#34;color:#75715e&#34;&gt;# Th,Sc,La离顶点的距离&lt;/span&gt;
+&lt;span style=&#34;color:#75715e&#34;&gt;# 三角图解判断曲线引自 Mukul R. Bhatia and Keith A.W. Crook，1986, Contrib Mineral Petrol (1986)&lt;/span&gt;
+&lt;span style=&#34;color:#75715e&#34;&gt;################################## Th-Sc-La图解 #####################################&lt;/span&gt;
+&lt;span style=&#34;color:#75715e&#34;&gt;# 线段标注数为1，内容为空&lt;/span&gt;
+gmt psternary Th-Sc-La.txt -J$J -R$R -Bf -Sqn1:+l&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;&amp;#34;&lt;/span&gt; -W0.4p,black,- -X1c -K -P &amp;gt; $PS
+gmt psternary -J$J -R$R -Bf -Sl0.2c+f8p,4+t&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;A&amp;#34;&lt;/span&gt; -Gblack -K -O &amp;gt;&amp;gt; $PS &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;lt;&amp;lt; EOF
+&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;10 60 30 A
+&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;EOF&lt;/span&gt;
+gmt psternary -J$J -R$R -Bf -Sl0.2c+f8p,4+t&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;B&amp;#34;&lt;/span&gt; -Gblack -K -O &amp;gt;&amp;gt; $PS &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;lt;&amp;lt; EOF
+&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;20 30 50 B
+&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;EOF&lt;/span&gt;
+gmt psternary -J$J -R$R -Bf -Sl0.2c+f8p,4+t&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;C;D&amp;#34;&lt;/span&gt; -Gblack -K -O &amp;gt;&amp;gt; $PS &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;lt;&amp;lt; EOF
+&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;30 10 60 C;D
+&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;EOF&lt;/span&gt;
+&lt;span style=&#34;color:#75715e&#34;&gt;# 原数据作归一化；三角图解端元顺序：下左-下右-上&lt;/span&gt;
+&lt;span style=&#34;color:#75715e&#34;&gt;# 数据前3列为三个端元值，第4列为颜色值，第5列为相应的符号; 命令中-S仅给出符号大小&lt;/span&gt;
+awk -v Th&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;$Th -v Sc&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;$Sc -v La&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;$La -v color&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;$color -v symbol&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;$symbol -F&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;[, ]+&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;NR&amp;gt;=2 {print \
+&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;    $Th*100/($Th+$Sc+$La), $Sc*100/($Th+$Sc+$La), $La*100/($Th+$Sc+$La), $color, $symbol}&amp;#39;&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;\
+&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt;	$data | gmt psternary -J$J -R$R -Bf -S0.2c -Ccolor.cpt -LTh/Sc/La -O &amp;gt;&amp;gt; $PS
+gmt psconvert -A -P -Tg $PS
+rm color.cpt gmt.*&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+  &lt;/div&gt;
+  
+  
+&lt;/div&gt;
+
+
+&lt;p&gt;绘图效果如下:&lt;/p&gt;
+
+
+
+
+&lt;figure&gt;
+
+&lt;img src=&#34;https://gmt-china.org/example/ex022/ternary.png&#34; width=&#34;400px&#34; /&gt;
+
+
+
+&lt;figcaption data-pre=&#34;Figure &#34; data-post=&#34;:&#34; &gt;
+  &lt;h4&gt;Th,Sc,La三角图解&lt;/h4&gt;
+  
+&lt;/figcaption&gt;
+
+&lt;/figure&gt;
+
+&lt;p&gt;其中，判断曲线使用 Engauge Digitizer 软件自动获得。&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>用两套地形数据绘制檀香山地形图</title>
+      <link>https://gmt-china.org/example/ex021/</link>
+      <pubDate>Wed, 05 Sep 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://gmt-china.org/example/ex021/</guid>
+      <description>&lt;p&gt;&lt;i class=&#34;fas fa-download&#34;&gt;&lt;/i&gt;
+&lt;a href=&#34;https://gmt-china.org/example/ex021/hawaii_land_1s.grd&#34;&gt;陆地地形文件&lt;/a&gt; |
+&lt;a href=&#34;https://gmt-china.org/example/ex021/hawaii_ocean_15s.grd&#34;&gt;海底地形文件&lt;/a&gt; |
+&lt;a href=&#34;https://gmt-china.org/example/ex021/hawaii.cpt&#34;&gt;配色文件&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;檀香山是夏威夷主岛火奴鲁鲁的旧称，因孙文为代表的革命党人在这里的革命活动而为华人熟知。&lt;/p&gt;
+
+&lt;p&gt;现在我们想绘制檀香山的地形。我们希望地形的精度尽可能的高，以得到最清晰的地图。
+目前，免费开放的最精确的地形文件的精度是 1 弧秒，即 30m 一个采样点，但只包含陆地。
+包含了海洋的地形的精度最高是 15s。
+这样，我们就需要用 1 弧秒的数据来绘制地形，15 弧秒的数据来绘制海底。&lt;/p&gt;
+
+&lt;p&gt;思路：首先用 15 弧秒的文件绘制檀香山及周围海域（既有陆地，又有海洋）的地形。
+然后，用 1 弧秒的数据去绘制陆地部分的地形。因为 1s 的数据后绘制，就把前面不太
+准确的 15 弧秒陆地地形覆盖了。要实现这个思路的关键在于绘制 1 弧秒数据的时候，
+怎样才能只覆盖陆地部分，而保留海洋部分。实现方法是：gmt 的 pscoast 模块提供了一个
+clip 的功能，实现用海岸线进行裁剪。具体请看代码中的注释:&lt;/p&gt;
+
+
+
+
+
+
+&lt;ul class=&#34;nav nav-tabs&#34;&gt;
+  &lt;li class=&#34;nav-item gmt-code-tab disable&#34;&gt;&lt;i class=&#34;fas fa-code&#34;&gt;&lt;/i&gt; hawaii&lt;/li&gt;
+  
+  
+  
+  
+  &lt;li class=&#34;nav-item&#34;&gt;
+      &lt;a class=&#34;gmt-code-tab active&#34; data-toggle=&#34;tab&#34; href=&#34;#hawaii_GMT6_sh&#34;&gt;GMT6+sh &lt;/a&gt;
+  &lt;/li&gt;
+  
+  
+  
+  &lt;li class=&#34;nav-item&#34;&gt;
+      &lt;a class=&#34;gmt-code-tab &#34; data-toggle=&#34;tab&#34; href=&#34;#hawaii_GMT5_sh&#34;&gt;GMT5+sh &lt;/a&gt;
+  &lt;/li&gt;
+  
+  
+&lt;/ul&gt;
+
+&lt;div class=&#34;tab-content&#34;&gt;
+  
+  
+  
+  
+  &lt;div class=&#34;tab-pane fade active show&#34; id=&#34;hawaii_GMT6_sh&#34;&gt;
+  &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#!/bin/bash
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;gmt begin hawaii png
+PS&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;hawaii.ps
+landdata&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;hawaii_land_1s.grd
+oceandata&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;hawaii_ocean_15s.grd
+cpt&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;hawaii.cpt
+
+&lt;span style=&#34;color:#75715e&#34;&gt;# 设置光照&lt;/span&gt;
+gmt grdgradient $landdata -Ne0.7 -A315 -G$landdata.light
+gmt grdgradient $oceandata -Ne0.7 -A315 -G$oceandata.light
+&lt;span style=&#34;color:#75715e&#34;&gt;# 底图&lt;/span&gt;
+gmt basemap -R-156.5/-154.5/18.5/20.5 -JM15c -Baf -BWSEN
+&lt;span style=&#34;color:#75715e&#34;&gt;# 地形&lt;/span&gt;
+&lt;span style=&#34;color:#75715e&#34;&gt;#  海洋部分&lt;/span&gt;
+gmt grdimage $oceandata -I$oceandata.light -C$cpt
+&lt;span style=&#34;color:#75715e&#34;&gt;#  陆地部分&lt;/span&gt;
+gmt coast -Da -Gc &lt;span style=&#34;color:#75715e&#34;&gt;# 用最高精度（-Da）的海岸线划出裁剪范围（-Gc）&lt;/span&gt;
+gmt grdimage $landdata -I$landdata.light -C$cpt &lt;span style=&#34;color:#75715e&#34;&gt;# 绘制陆地部分地形&lt;/span&gt;
+gmt coast -Q &lt;span style=&#34;color:#75715e&#34;&gt;# 关闭裁剪&lt;/span&gt;
+rm *.light
+gmt end&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+  &lt;/div&gt;
+  
+  
+  
+  &lt;div class=&#34;tab-pane fade &#34; id=&#34;hawaii_GMT5_sh&#34;&gt;
+  &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#!/bin/bash
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;PS&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;hawaii.ps
+landdata&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;hawaii_land_1s.grd
+oceandata&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;hawaii_ocean_15s.grd
+cpt&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;hawaii.cpt
+
+&lt;span style=&#34;color:#75715e&#34;&gt;# 设置光照&lt;/span&gt;
+gmt grdgradient $landdata -Ne0.7 -A315 -G$landdata.light
+gmt grdgradient $oceandata -Ne0.7 -A315 -G$oceandata.light
+&lt;span style=&#34;color:#75715e&#34;&gt;# 底图&lt;/span&gt;
+gmt psbasemap -R-156.5/-154.5/18.5/20.5 -JM15c -Baf -BWSEN -K -P &amp;gt; $PS
+&lt;span style=&#34;color:#75715e&#34;&gt;# 地形&lt;/span&gt;
+&lt;span style=&#34;color:#75715e&#34;&gt;#  海洋部分&lt;/span&gt;
+gmt grdimage $oceandata -R -J -I$oceandata.light -C$cpt -O -K &amp;gt;&amp;gt; $PS
+&lt;span style=&#34;color:#75715e&#34;&gt;#  陆地部分&lt;/span&gt;
+gmt pscoast -R -J -Da -Gc -O -K &amp;gt;&amp;gt; $PS &lt;span style=&#34;color:#75715e&#34;&gt;# 用最高精度（-Da）的海岸线划出裁剪范围（-Gc）&lt;/span&gt;
+gmt grdimage $landdata -R -J -I$landdata.light -C$cpt -O -K &amp;gt;&amp;gt; $PS &lt;span style=&#34;color:#75715e&#34;&gt;# 绘制陆地部分地形&lt;/span&gt;
+gmt pscoast -O -K -Q &amp;gt;&amp;gt; $PS &lt;span style=&#34;color:#75715e&#34;&gt;# 关闭裁剪&lt;/span&gt;
+&lt;span style=&#34;color:#75715e&#34;&gt;# 文件尾&lt;/span&gt;
+gmt psxy -R -J -T -O &amp;gt;&amp;gt; $PS
+&lt;span style=&#34;color:#75715e&#34;&gt;# 输出&lt;/span&gt;
+gmt psconvert $PS -A -Tg
+rm $PS *.light gmt.history&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+  &lt;/div&gt;
+  
+  
+&lt;/div&gt;
+
+
+&lt;p&gt;绘图效果如下:&lt;/p&gt;
+
+
+
+
+&lt;figure&gt;
+
+&lt;img src=&#34;https://gmt-china.org/example/ex021/hawaii.png&#34; width=&#34;1000px&#34; /&gt;
+
+
+
+&lt;figcaption data-pre=&#34;Figure &#34; data-post=&#34;:&#34; &gt;
+  &lt;h4&gt;夏威夷檀香山&lt;/h4&gt;
+  
+&lt;/figcaption&gt;
+
+&lt;/figure&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>GMT6 的安装: 正式推出前体验 GMT6</title>
+      <link>https://gmt-china.org/blog/install-gmt6/</link>
+      <pubDate>Fri, 31 Aug 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://gmt-china.org/blog/install-gmt6/</guid>
+      <description>&lt;p&gt;GMT6 计划于今年年底正式发布。GMT6 完全兼容 GMT5 并新增了更易用的现代模式，
+想要提前体验的可以按照如下说明安装 GMT6 的开发版。&lt;/p&gt;
+
+&lt;h1 id=&#34;linux-平台&#34;&gt;Linux 平台&lt;/h1&gt;
+
+&lt;p&gt;使用如下命令获取 GMT6 开发版源码：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;$ git clone https://github.com/GenericMappingTools/gmt
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;获取源码之后，按照如下步骤即可安装。详细步骤可参考
+《&lt;a href=&#34;https://docs.gmt-china.org/latest/install/linux/&#34; target=&#34;_blank&#34;&gt;Linux下安装GMT&lt;/a&gt;》一文。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ cd gmt
+$ cp cmake/ConfigUserTemplate.cmake cmake/ConfigUser.cmake
+
+# Edit cmake/ConfigUser.cmake [见《Linux下安装GMT》一文]
+
+$ mkdir build
+$ cd build
+$ cmake ..
+$ make -jx
+$ make -jx install
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h1 id=&#34;macos-平台&#34;&gt;macOS 平台&lt;/h1&gt;
+
+&lt;p&gt;macOS 用户建议用 &lt;a href=&#34;https://brew.sh/&#34; target=&#34;_blank&#34;&gt;homebrew&lt;/a&gt; 安装软件。
+这里提供了一个可以安装GMT6的formula文件：
+&lt;i class=&#34;fas fa-download&#34;&gt;&lt;/i&gt; &lt;a href=&#34;gmt6.rb&#34; target=&#34;_blank&#34;&gt;gmt6.rb&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;下载后执行如下命令安装GMT6:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;brew unlink gmt # 临时删除 GMT5
+brew install --HEAD gmt6.rb # 安装 GMT6
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;从GMT6切换回GMT5:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;brew unlink gmt6; brew link gmt
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;从GMT5切换回GMT6:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;brew unlink gmt; brew link gmt6
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;GMT6 目前还处在密切的发布前更新中，如果想更新，可以先删除，再重新安装:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;brew uninstall gmt6
+brew install --HEAD gmt6.rb
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h1 id=&#34;windows-平台&#34;&gt;Windows 平台&lt;/h1&gt;
+
+&lt;p&gt;Windows下可以直接使用开发版的GMT6安装包，该安装包会不定期更新。&lt;/p&gt;
+
+&lt;p&gt;安装包下载地址： &lt;a href=&#34;http://w3.ualg.pt/~jluis/mirone/downloads/gmt.html&#34; target=&#34;_blank&#34;&gt;http://w3.ualg.pt/~jluis/mirone/downloads/gmt.html&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;安装包文件名格式为 GMT-6.0.0_*.exe。&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>绘制速度模型</title>
+      <link>https://gmt-china.org/example/ex020/</link>
+      <pubDate>Wed, 18 Apr 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://gmt-china.org/example/ex020/</guid>
+      <description>&lt;p&gt;&lt;i class=&#34;fas fa-download&#34;&gt;&lt;/i&gt;
+&lt;a href=&#34;https://gmt-china.org/example/ex020/model.txt&#34;&gt;速度模型数据&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;本文展示了如何绘制地壳速度模型图。示例数据分为 6 列，分别为 地层厚度，S波速度，
+P波速度，密度，S波Q值和P波Q值，绘图脚本只用到了前 3 列数据。&lt;/p&gt;
+
+&lt;p&gt;Bash 绘图脚本如下:&lt;/p&gt;
+
+
+
+
+
+
+&lt;ul class=&#34;nav nav-tabs&#34;&gt;
+  &lt;li class=&#34;nav-item gmt-code-tab disable&#34;&gt;&lt;i class=&#34;fas fa-code&#34;&gt;&lt;/i&gt; draw-model&lt;/li&gt;
+  
+  
+  
+  
+  &lt;li class=&#34;nav-item&#34;&gt;
+      &lt;a class=&#34;gmt-code-tab active&#34; data-toggle=&#34;tab&#34; href=&#34;#draw-model_GMT6_sh&#34;&gt;GMT6+sh &lt;/a&gt;
+  &lt;/li&gt;
+  
+  
+  
+  &lt;li class=&#34;nav-item&#34;&gt;
+      &lt;a class=&#34;gmt-code-tab &#34; data-toggle=&#34;tab&#34; href=&#34;#draw-model_GMT5_sh&#34;&gt;GMT5+sh &lt;/a&gt;
+  &lt;/li&gt;
+  
+  
+&lt;/ul&gt;
+
+&lt;div class=&#34;tab-content&#34;&gt;
+  
+  
+  
+  
+  &lt;div class=&#34;tab-pane fade active show&#34; id=&#34;draw-model_GMT6_sh&#34;&gt;
+  &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#!/bin/bash
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;gmt begin model png
+gmt set MAP_TICK_LENGTH_PRIMARY -0.1c
+model&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;model.txt
+gmt basemap -R0/10/0/50 -JX8c/-10c -Bx1+l&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Velocity (km/s)&amp;#34;&lt;/span&gt; -By10+l&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Depth (km)&amp;#34;&lt;/span&gt; -BWS+t&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;Crust model&amp;#39;&lt;/span&gt;
+gmt basemap -Ben -B0
+&lt;span style=&#34;color:#75715e&#34;&gt;# 利用 awk 计算每一层上下边界的深度，提取该层的速度&lt;/span&gt;
+&lt;span style=&#34;color:#75715e&#34;&gt;# 每一层上边界的深度即为前几层的厚度累加，下边界的深度为上边界的深度加该层层厚&lt;/span&gt;
+&lt;span style=&#34;color:#75715e&#34;&gt;# Vs&lt;/span&gt;
+awk &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;BEGIN{d1=0;d2=0}{d2=d2+$1;print $2,d1;print $2,d2;d1=d2;}&amp;#39;&lt;/span&gt; $model | gmt plot -W1.5p,blue
+&lt;span style=&#34;color:#75715e&#34;&gt;# Vp&lt;/span&gt;
+awk &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;BEGIN{d1=0;d2=0}{d2=d2+$1;print $3,d1;print $3,d2;d1=d2;}&amp;#39;&lt;/span&gt; $model | gmt plot -W1.5p,green,6_2:2
+gmt legend -DjBL+w2c+o0.2c/0.2c -F &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;lt;&amp;lt; EOF
+&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;S 0.4c - 0.5c - 1p,blue 1c @;blue;Vs@;;
+&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;S 0.4c - 0.5c - 1p,green,6_2:0 1c @;green;Vp@;;
+&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;EOF&lt;/span&gt;
+gmt end&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+  &lt;/div&gt;
+  
+  
+  
+  &lt;div class=&#34;tab-pane fade &#34; id=&#34;draw-model_GMT5_sh&#34;&gt;
+  &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#!/bin/bash
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;gmt set MAP_TICK_LENGTH_PRIMARY -0.1c
+model&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;model.txt
+PS&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;model.ps
+gmt psbasemap -R0/10/0/50 -JX8c/-10c -Bx1+l&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Velocity (km/s)&amp;#34;&lt;/span&gt; -By10+l&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Depth (km)&amp;#34;&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;\
+&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt;                                       -BWS+t&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;Crust model&amp;#39;&lt;/span&gt; -K -P &amp;gt; $PS
+gmt psbasemap -R -J -Ben -B0 -K -O &amp;gt;&amp;gt; $PS
+&lt;span style=&#34;color:#75715e&#34;&gt;# 利用 awk 计算每一层上下边界的深度，提取该层的速度&lt;/span&gt;
+&lt;span style=&#34;color:#75715e&#34;&gt;# 每一层上边界的深度即为前几层的厚度累加，下边界的深度为上边界的深度加该层层厚&lt;/span&gt;
+&lt;span style=&#34;color:#75715e&#34;&gt;# Vs&lt;/span&gt;
+awk &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;BEGIN{d1=0;d2=0}{d2=d2+$1;print $2,d1;print $2,d2;d1=d2;}&amp;#39;&lt;/span&gt; $model | &lt;span style=&#34;color:#ae81ff&#34;&gt;\
+&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt;gmt psxy -R -J -W1.5p,blue -K -O &amp;gt;&amp;gt; $PS
+&lt;span style=&#34;color:#75715e&#34;&gt;# Vp&lt;/span&gt;
+awk &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;BEGIN{d1=0;d2=0}{d2=d2+$1;print $3,d1;print $3,d2;d1=d2;}&amp;#39;&lt;/span&gt; $model | &lt;span style=&#34;color:#ae81ff&#34;&gt;\
+&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt;gmt psxy -R -J -W1.5p,green,6_2:2 -K -O &amp;gt;&amp;gt; $PS
+gmt pslegend -R -J -DjBL+w2c+o0.2c/0.2c -F -O &amp;gt;&amp;gt; $PS &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;lt;&amp;lt;EOF
+&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;S 0.4c - 0.5c - 1p,blue 1c @;blue;Vs@;;
+&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;S 0.4c - 0.5c - 1p,green,6_2:0 1c @;green;Vp@;;
+&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;EOF&lt;/span&gt;
+gmt psconvert $PS -A -Tg -Z
+rm gmt*&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+  &lt;/div&gt;
+  
+  
+&lt;/div&gt;
+
+
+&lt;p&gt;绘图效果如下:&lt;/p&gt;
+
+
+
+
+&lt;figure&gt;
+
+&lt;img src=&#34;https://gmt-china.org/example/ex020/model.png&#34; width=&#34;400px&#34; /&gt;
+
+
+
+&lt;figcaption data-pre=&#34;Figure &#34; data-post=&#34;:&#34; &gt;
+  &lt;h4&gt;绘制速度模型&lt;/h4&gt;
+  
+&lt;/figcaption&gt;
+
+&lt;/figure&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>2017版1:100万全国标准基础地理数据！你值得拥有</title>
+      <link>https://gmt-china.org/blog/national-geographic-database/</link>
+      <pubDate>Sun, 15 Apr 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://gmt-china.org/blog/national-geographic-database/</guid>
+      <description>&lt;p&gt;本文介绍国家标准地理数据的获取以及处理为 GMT 支持格式的方法。&lt;/p&gt;
+
+&lt;p&gt;具体包括：&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;国家标准1:100万（非涉密）基础地理数据的申请、下载&lt;/li&gt;
+&lt;li&gt;数据集内容简介&lt;/li&gt;
+&lt;li&gt;数据集要素合并、提取&lt;/li&gt;
+&lt;li&gt;借助OGR工具将SHP转为GMT可用格式&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&#34;alert alert-info&#34;&gt;
+  &lt;div&gt;
+    &lt;p&gt;本文仅供个人科研作图参考。若使用者编制的地图需向社会公开的，请务必遵守
+《地图管理条例》有关规定依法履行地图审核程序。&lt;/p&gt;
+
+  &lt;/div&gt;
+&lt;/div&gt;
+
+
+&lt;h2 id=&#34;数据概况&#34;&gt;数据概况&lt;/h2&gt;
+
+&lt;p&gt;国家基础地理信息中心于2017年11月份开始免费向公众提供全国1:100万非涉密的
+全国基础地理数据库。目前数据整体现势性为2017年。该数据库：&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;共77幅DLG数据集，包括全国陆地范围以及台湾岛、海南岛、钓鱼岛、南海诸岛在内的主要岛屿及其临近海域。&lt;/li&gt;
+&lt;li&gt;包括水系、居民地及设施、公路铁路、行政边界、地名等5个数据集12个数据层，如下图所示。&lt;/li&gt;
+&lt;/ul&gt;
+
+
+
+
+&lt;figure&gt;
+
+&lt;img src=&#34;01.datalist.png&#34; /&gt;
+
+
+
+&lt;figcaption data-pre=&#34;Figure &#34; data-post=&#34;:&#34; &gt;
+  &lt;h4&gt;全国基础地理数据库数据集&lt;/h4&gt;
+  
+&lt;/figcaption&gt;
+
+&lt;/figure&gt;
+
+&lt;p&gt;数据更多介绍可访问&lt;a href=&#34;http://www.webmap.cn/commres.do?method=result100W&#34; target=&#34;_blank&#34;&gt;全国地理信息资源目录服务系统&lt;/a&gt;。&lt;/p&gt;
+
+&lt;h2 id=&#34;数据获取&#34;&gt;数据获取&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;进入&lt;a href=&#34;http://www.webmap.cn&#34; target=&#34;_blank&#34;&gt;全国地理信息资源目录服务系统&lt;/a&gt;，点右上角“注册”。已注册用户直接登陆。&lt;/li&gt;
+&lt;li&gt;在“数据下载”栏目中，点击进入“1：100万全国基础地理信息数据库”。&lt;/li&gt;
+&lt;li&gt;该数据集下有77个图幅产品，当前最新生产时间是2017年。可选择一两个图幅，或全部选中，加入成果车。&lt;/li&gt;
+&lt;li&gt;结算，填写订单中的个人信息，&lt;strong&gt;验证手机号&lt;/strong&gt;，下载数据。
+&lt;strong&gt;注：&lt;/strong&gt;若未提示验证手机，换个firefox浏览器试试。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;数据集内容简介&#34;&gt;数据集内容简介&lt;/h2&gt;
+
+&lt;p&gt;该数据集包括5类12个要素层，分别为：&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;AANP 自然地名（点）图层&lt;/strong&gt;：包括交通要素名、纪念地和古迹名、山名、水系名、海洋地域名、自然地域名等&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;02.AANP.png&#34; alt=&#34;AANP&#34; /&gt;&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;AGNP 居民地（点）图层&lt;/strong&gt;：包括各级行政地名和城乡居民地名称等&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;03.AGNP.png&#34; alt=&#34;AGNP&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;该数据集包括首都、省会、直辖市、特别行政区、地级行政区、县级行政区以及乡镇，以识别码CLASS进行区分：&lt;/p&gt;
+
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;行政区地名&lt;/th&gt;
+&lt;th&gt;CLASS码&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;省行政地名(直辖市、自治区、特别行政区)&lt;/td&gt;
+&lt;td&gt;AB&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;自治州、盟、地区行政地名&lt;/td&gt;
+&lt;td&gt;AC&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;地级市行政地名&lt;/td&gt;
+&lt;td&gt;AD&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;县级市行政地名&lt;/td&gt;
+&lt;td&gt;AE&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;县级行政地名（自治县、旗、自治旗、地级市市辖区）&lt;/td&gt;
+&lt;td&gt;AF&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;县辖区及县级行政区域的派出机构地名&lt;/td&gt;
+&lt;td&gt;AG&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;街道办事处地名&lt;/td&gt;
+&lt;td&gt;AH&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;镇行政地名&lt;/td&gt;
+&lt;td&gt;AI&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;乡行政地名&lt;/td&gt;
+&lt;td&gt;AJ&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;BOUA 各级行政区（面）图层&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;04.BOUA.png&#34; alt=&#34;BOUA&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;注：该数据集包含了分幅边界，进行单个行政区（例如某省、市）边界、面积提取时需先合并图层。&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;BOUL 中国及邻区各级行政界限（线）图层&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;05.BOUL.png&#34; alt=&#34;BOUL&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;该数据集包括各级行政区界线，以GB码进行区分：&lt;/p&gt;
+
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;行政区界类型&lt;/th&gt;
+&lt;th&gt;GB码&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;海岸线&lt;/td&gt;
+&lt;td&gt;250200&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;水系交汇处&lt;/td&gt;
+&lt;td&gt;260100&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;外国地区国界线&lt;/td&gt;
+&lt;td&gt;610200&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;国界线(已定)&lt;/td&gt;
+&lt;td&gt;620201&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;国界线(未定)&lt;/td&gt;
+&lt;td&gt;620202&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;省级界线&lt;/td&gt;
+&lt;td&gt;630200&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;特别行政区界&lt;/td&gt;
+&lt;td&gt;630400&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;地、市、州级行政区界&lt;/td&gt;
+&lt;td&gt;640200&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;县级行政区界（已定）&lt;/td&gt;
+&lt;td&gt;650201&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;特殊地区界限&lt;/td&gt;
+&lt;td&gt;670202&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;BOUP 领海基点(点)图层&lt;/strong&gt;&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;HYDA 水系（面）图层，包括湖泊、水库、双线河流等&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;06.HYDA.png&#34; alt=&#34;HYDA&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;水系数据集以GB码区分：&lt;/p&gt;
+
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;水系要素类型&lt;/th&gt;
+&lt;th&gt;GB码&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;地面河流&lt;/td&gt;
+&lt;td&gt;210101&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;时令河&lt;/td&gt;
+&lt;td&gt;210200&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;干涸河&lt;/td&gt;
+&lt;td&gt;210300&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;湖泊&lt;/td&gt;
+&lt;td&gt;230101&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;池塘&lt;/td&gt;
+&lt;td&gt;230102&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;时令湖&lt;/td&gt;
+&lt;td&gt;230200&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;干涸湖&lt;/td&gt;
+&lt;td&gt;230300&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;建成水库&lt;/td&gt;
+&lt;td&gt;240101&lt;/td&gt;
+&lt;/tr&gt;
+
+&lt;tr&gt;
+&lt;td&gt;建设中水库&lt;/td&gt;
+&lt;td&gt;240102&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;HYDL 水系（线）图层，包括单线河流、沟渠、河流结构线等&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;07.HYDL.png&#34; alt=&#34;HYDL&#34; /&gt;&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;HYDP 水系（点）图层，包括泉、井等&lt;/strong&gt;&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;LRDL 公路（线）图层，包括国道、省道、县道、乡道、其它公路、街道、乡村道路等&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;08.LRDL.png&#34; alt=&#34;LRDL&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;不同行政等级公路数据以GB码进行区分，而不同技术等级以RTEG码区分。&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;LRRL 铁路（线）图层&lt;/strong&gt;&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;RESA.shp 居民地（面）图层&lt;/strong&gt;&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;RESP 居民地（点）图层，包括普通房屋、蒙古包、放牧点等&lt;/strong&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;以上只列出了部分要素的分类编码，更多可参考基础地理信息要素分类与代码（GB/T 13923-2006）。&lt;/p&gt;
+
+&lt;h2 id=&#34;数据处理&#34;&gt;数据处理&lt;/h2&gt;
+
+&lt;p&gt;从网站上直接下载的数据是分图幅的 geodatabase(gdb) 数据库文件，如果需要用 GMT
+画“全国一张图”，需要：&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;合并77个gdb文件中的同类要素&lt;/li&gt;
+&lt;li&gt;提取某类要素中的某个等级数据&lt;/li&gt;
+&lt;li&gt;转为gmt识别的文本格式&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;gdb数据库文件合并&#34;&gt;gdb数据库文件合并&lt;/h3&gt;
+
+&lt;p&gt;可以使用FME软件、ArcGIS软件或直接编写Python批处理脚本进行gdb数据的批量合并。
+前两款软件比较大，若只需要对数据进行简单处理，可以利用Python的&lt;strong&gt;ArcPy&lt;/strong&gt;包进行批处理：&lt;/p&gt;
+
+
+
+
+                          
+
+&lt;pre&gt;&lt;code class=&#34;language-python line-numbers&#34;&gt;# -*- coding: utf-8 -*-
+
+import os
+import arcpy
+
+
+# 77个gdb数据库合并
+def MergeFileGDB(inPath, outPath, outName):
+    arcpy.env.workspace = inPath
+    mergeFilePath = outPath &amp;#43; os.sep &amp;#43; outName
+    print(mergeFilePath)
+
+    workspaces = arcpy.ListWorkspaces(&amp;#34;*&amp;#34;, &amp;#34;FileGDB&amp;#34;)
+    for workspace in workspaces:
+        print(workspace)
+        arcpy.env.workspace = workspace
+        mergeFileExist = os.path.exists(mergeFilePath)
+        if mergeFileExist:
+            featureclasses = arcpy.ListFeatureClasses()
+            for fc in featureclasses:
+                arcpy.Append_management(fc, os.path.join(outPath &amp;#43; os.sep &amp;#43; outName, os.path.splitext(fc)[0]), &amp;#34;TEST&amp;#34;, &amp;#34;&amp;#34;, &amp;#34;&amp;#34;)
+        else:
+            arcpy.CreateFileGDB_management(outPath, outName)
+            featureclasses = arcpy.ListFeatureClasses()
+            for fc in featureclasses:
+                arcpy.FeatureClassToFeatureClass_conversion(fc, outPath &amp;#43; os.sep &amp;#43; outName, os.path.splitext(fc)[0])
+
+
+# 提取gdb数据库的所有shp图层
+def gdb2shp(out_location, out_name):
+    arcpy.env.workspace = out_location &amp;#43; os.sep &amp;#43; out_name
+    print(arcpy.env.workspace)
+    featureclasses = arcpy.ListFeatureClasses()
+    for fc in featureclasses:
+        arcpy.CopyFeatures_management(fc, out_location &amp;#43; os.sep &amp;#43; str(fc))
+        print(fc)
+
+
+in_file = r&amp;#34;F:\from&amp;#34;
+out_location = r&amp;#34;F:\results&amp;#34;
+out_name = &amp;#34;merge.gdb&amp;#34;
+MergeFileGDB(in_file, out_location, out_name)
+gdb2shp(out_location, out_name)
+&lt;/code&gt;&lt;/pre&gt;
+
+
+
+&lt;p&gt;其中，&lt;code&gt;infile&lt;/code&gt;是77个gdb文件夹的目录，&lt;code&gt;out_location&lt;/code&gt;是合并目录，&lt;code&gt;out_name&lt;/code&gt;是合并
+为一个gdb数据库文件的名称。ArcPy可以随ArcGIS而安装，也可以单独安装。该代码将分幅的
+交通、水系、边界等12类要素分别合并为全国一张图，最后转为12个shp文件。&lt;/p&gt;
+
+&lt;h3 id=&#34;提取某类要素&#34;&gt;提取某类要素&lt;/h3&gt;
+
+&lt;p&gt;由于每个数据集（一个shp文件）中存在不同等级的要素，而在实际使用中可能需要提取
+某省的居民地点数据，或仅国界、省界。所以需利用arcpy编程进一步提取。&lt;/p&gt;
+
+&lt;p&gt;例如：&lt;/p&gt;
+
+&lt;p&gt;已知行政区划&lt;code&gt;BOUL&lt;/code&gt;图层中GB代码&lt;code&gt;620201&lt;/code&gt;、&lt;code&gt;620202&lt;/code&gt;、&lt;code&gt;250200&lt;/code&gt;分别为已定国界、
+未定国界和海岸线，编写Python脚本，从&lt;code&gt;BOUL&lt;/code&gt;图层中提取国界及海岸线要素：&lt;/p&gt;
+
+
+
+
+                          
+
+&lt;pre&gt;&lt;code class=&#34;language-python line-numbers&#34;&gt;import arcpy
+infile = r&amp;#34;F:\results &amp;#34;
+arcpy.env.workspace = infile
+qry = &amp;#39;&amp;#34;GB&amp;#34; = 620201 or &amp;#34;GB&amp;#34; = 620202 or &amp;#34;GB&amp;#34; = 250200&amp;#39;
+
+try:
+    arcpy.MakeFeatureLayer_management(&amp;#34;BOUL.shp&amp;#34;, &amp;#34;BOUL_1&amp;#34;)
+    arcpy.SelectLayerByAttribute_management(&amp;#34;BOUL_1&amp;#34;, &amp;#34;NEW_SELECTION&amp;#34;, qry)
+    arcpy.CopyFeatures_management(&amp;#34;BOUL_1&amp;#34;, &amp;#34;BOUL_1.shp&amp;#34;)
+except:
+    print(&amp;#34;An error occured during selection&amp;#34;)
+&lt;/code&gt;&lt;/pre&gt;
+
+
+
+&lt;p&gt;其中，&lt;code&gt;infile&lt;/code&gt;表示行政区划图层&lt;code&gt;BOUL.shp&lt;/code&gt;所在的文件夹。代码运行后，从该图层中
+提取GB代码为&lt;code&gt;620201&lt;/code&gt;、&lt;code&gt;620202&lt;/code&gt;、&lt;code&gt;250200&lt;/code&gt;的要素，保存到当前目录的&lt;code&gt;BOUL_1.shp&lt;/code&gt;中.&lt;/p&gt;
+
+&lt;h3 id=&#34;格式转换&#34;&gt;格式转换&lt;/h3&gt;
+
+&lt;p&gt;利用OGR库将shp文件转化为gmt可用的文本文件，具体可参考博文&lt;a href=&#34;https://gmt-china.org/blog/gdal-ogr/&#34;&gt;GDAL/OGR: 地理空间数据格式转换神器&lt;/a&gt;:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;ogr2ogr -f GMT BOUL_1.gmt BOUL_1.shp
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;最后GMT绘图如下：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;gmt psxy BOUL_1.gmt -R70/145/3/55 -JM105/35/6.5i &amp;gt; ChinaMap.ps
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;绘图结果如下：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;09.ChinaMap.png&#34; alt=&#34;ChinaMap&#34; /&gt;&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>GMT 各大版本间的差异</title>
+      <link>https://gmt-china.org/blog/gmt-versions/</link>
+      <pubDate>Sat, 07 Apr 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://gmt-china.org/blog/gmt-versions/</guid>
+      <description>
+
+&lt;p&gt;GMT 目前存在如下几个大版本:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.soest.hawaii.edu/gmt/&#34; target=&#34;_blank&#34;&gt;GMT4&lt;/a&gt;：最新版本为 GMT 4.5.18，也是最终版本，已不再维护更新；&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://gmt.soest.hawaii.edu/doc/5.4.5/&#34; target=&#34;_blank&#34;&gt;GMT5&lt;/a&gt;：最新版本为 GMT 5.4.5，是目前的主流版本&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://gmt.soest.hawaii.edu/doc/latest/&#34; target=&#34;_blank&#34;&gt;GMT6&lt;/a&gt;：正在开发中的版本，预计未来一年内会发发布第一个正式版&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;除此之外，GMT 还为其他常用的编程语言提供了方便的接口：&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/GenericMappingTools/gmtmex&#34; target=&#34;_blank&#34;&gt;gmtmex&lt;/a&gt;：GMT 的 matlab 接口，支持GMT5和GMT6&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/GenericMappingTools/GMT.jl&#34; target=&#34;_blank&#34;&gt;GMT.jl&lt;/a&gt;：GMT 的 Julia 接口，支持GMT5和GMT6&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/GenericMappingTools/pygmt&#34; target=&#34;_blank&#34;&gt;pygmt&lt;/a&gt;：GMT 的 Python 接口，支持GMT6&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;GMT6 虽然尚未发布，但其已经足够稳定，可以用于日常使用。最主要的是，GMT6 几乎
+完全兼容 GMT5 的语法，且提供了一种更为简洁易用的新写法。&lt;/p&gt;
+
+&lt;div class=&#34;alert alert-info&#34;&gt;
+  &lt;div&gt;
+    &lt;p&gt;对 GMT6 有兴趣的 Linux 用户，可以根据 &lt;a href=&#34;https://gmt-china.org/blog/install-gmt6/&#34;&gt;此文&lt;/a&gt; 安装GMT6的开发版本。&lt;/p&gt;
+
+  &lt;/div&gt;
+&lt;/div&gt;
+
+
+&lt;p&gt;本文将通过绘制如下一张简单的图片来展示 GMT 不同版本在绘图脚本上的主要差异。
+需要注意，本文不可能详细介绍 GMT 各版本之间的主要差异，本文的主要目的是为了
+演示 GMT6 新语法的简洁性。&lt;/p&gt;
+
+
+
+
+&lt;figure&gt;
+
+&lt;img src=&#34;https://gmt-china.org/blog/gmt-versions/gmt-map.png&#34; /&gt;
+
+
+&lt;/figure&gt;
+
+&lt;h2 id=&#34;gmt4&#34;&gt;GMT4&lt;/h2&gt;
+
+&lt;p&gt;下面的脚本展示了如何在GMT4下绘制上图。脚本中的注释信息简单介绍了每句命令的含义，
+选项的具体含义不是本文重点，不再赘述。&lt;/p&gt;
+
+
+
+
+                          
+
+&lt;pre&gt;&lt;code class=&#34;language-bash line-numbers&#34;&gt;#!/bin/bash
+PS=gmt-map.ps
+
+J=X10c/10c
+R=0/10/0/10
+
+# 修改GMT默认参数
+gmtset HEADER_FONT Helvetica-Bold HEADER_FONT_SIZE 24p
+
+# 写入PS文件头
+psxy -J$J -R$R -K -T &amp;gt; $PS
+
+# 绘制底图
+psbasemap -J$J -R$R -Ba2f1:X::,km:/a2f1:=$::Y:WSen:.&amp;#34;Simple Basemap&amp;#34;: -K -O &amp;gt;&amp;gt; $PS
+
+# 绘制两个五角星
+psxy -J$J -R$R -Sa1c -Gred -K -O &amp;gt;&amp;gt; $PS &amp;lt;&amp;lt; EOF
+1 1
+2 2
+EOF
+
+# 绘制线段
+psxy -J$J -R$R -W1p -m -K -O &amp;gt;&amp;gt; $PS &amp;lt;&amp;lt; EOF
+&amp;gt; -W2p,red
+3 3
+3.5 4
+&amp;gt; -W2p,blue,-
+4 4
+4 6
+EOF
+
+# 绘制箭头
+psxy -J$J -R$R -Sv -Gred -K -O &amp;gt;&amp;gt; $PS &amp;lt;&amp;lt; EOF
+5 5 30 1
+EOF
+
+# 绘制地图及其比例尺
+R=70/138/13/56
+J=M105/35/12.4c
+pscoast -J$J -R$R -Df -A1000 -B10/10:.&amp;#39;China Map&amp;#39;: -W1/1p -N1/1p -Lf128/20/20/1000k&amp;#43;u -X12c -K -O &amp;gt;&amp;gt; $PS
+
+# 写入PS文件尾
+psxy -J$J -R$R -O -T &amp;gt;&amp;gt; $PS
+
+# 将图片转换为PDF格式
+ps2raster -A -P -Tf $PS
+
+# 清理当前目录下的临时文件
+rm .gmtdefaults4 .gmtcommands4
+&lt;/code&gt;&lt;/pre&gt;
+
+
+
+&lt;h2 id=&#34;gmt5&#34;&gt;GMT5&lt;/h2&gt;
+
+&lt;p&gt;下面的脚本展示了如何在 GMT5 下绘制上图。将 GMT5 与 GMT4 的脚本相比，会发现如下
+几个主要的区别：&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;所有 GMT 命令均以 &lt;code&gt;gmt&lt;/code&gt; 开头，以避免与其他同名的命令冲突&lt;/li&gt;
+&lt;li&gt;所有 GMT 参数进行了统一分类与命令，比如与文字相关的参数都名为 &lt;code&gt;FONT_xxx&lt;/code&gt; 、
+与绘图相关的参数都名为 &lt;code&gt;MAP_xxx&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;-B&lt;/code&gt; 选项可重复多次使用，&lt;code&gt;-BWSen+t&lt;/code&gt; 用于设置整个底图的属性（标题、背景色等），
+&lt;code&gt;-Bx&lt;/code&gt; 和 &lt;code&gt;-By&lt;/code&gt; 则分别设置 X 轴和 Y 轴的轴属性（刻度、标注、标签、单位、前缀等）。
+相比于 GMT4 而言，条理更加清晰&lt;/li&gt;
+&lt;li&gt;增加了颜色透明功能，&lt;code&gt;red@70&lt;/code&gt; 表示70%透明的红色&lt;/li&gt;
+&lt;li&gt;可以自动处理多段数据，不再需要 &lt;code&gt;-m&lt;/code&gt; 选项&lt;/li&gt;
+&lt;li&gt;绘制箭头的语法不同，新语法有更多的选项，可以得到更多种类的箭头&lt;/li&gt;
+&lt;li&gt;比例尺语法有变化，即 &lt;code&gt;-L&lt;/code&gt; 和 &lt;code&gt;-F&lt;/code&gt; 选项，新语法看上去很复杂，但此语法将比例尺、
+colorbar、指南针等修饰物的语法做了统一，且一旦理解之后，可以很灵活地在图上
+任意位置放置这些修饰物&lt;/li&gt;
+&lt;li&gt;图片转换命令从 &lt;code&gt;ps2raster&lt;/code&gt; 改成了 &lt;code&gt;psconvert&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;配置文件和命令历史文件的文件名变成了 &lt;code&gt;gmt.conf&lt;/code&gt; 和 &lt;code&gt;gmt.history&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+
+
+
+                          
+
+&lt;pre&gt;&lt;code class=&#34;language-bash line-numbers&#34;&gt;#!/bin/bash
+PS=gmt-map.ps
+
+J=X10c/10c
+R=0/10/0/10
+
+# 参数名变化
+gmt set FONT_TITLE=24p,Helvetica-Bold
+gmt psxy -J$J -R$R -K -T &amp;gt; $PS
+
+# -B选项语法不同
+gmt psbasemap -J$J -R$R -Bxaf&amp;#43;lX&amp;#43;u&amp;#39; km&amp;#39; -Byaf&amp;#43;p&amp;#39;$ &amp;#39;&amp;#43;lY -BWSen&amp;#43;t&amp;#34;Simple Basemap&amp;#34; -K -O &amp;gt;&amp;gt; $PS
+
+# 颜色透明功能
+gmt psxy -J$J -R$R -Sa1c -Gred@70 -K -O &amp;gt;&amp;gt; $PS &amp;lt;&amp;lt; EOF
+1 1
+2 2
+EOF
+
+# 不再需要-m选项
+gmt psxy -J$J -R$R -W1p -K -O &amp;gt;&amp;gt; $PS &amp;lt;&amp;lt; EOF
+&amp;gt; -W2p,red
+3 3
+3.5 4
+&amp;gt; -W2p,blue,-
+4 4
+4 6
+EOF
+
+# 绘制箭头语法改变
+gmt psxy -J$J -R$R -Sv0.4c&amp;#43;e -Gred -K -O &amp;gt;&amp;gt; $PS &amp;lt;&amp;lt; EOF
+5 5 30 1
+EOF
+
+R=70/138/13/56
+J=M105/35/12.4c
+
+# 绘制比例尺语法改变
+gmt pscoast -J$J -R$R -Df -A1000 -Baf -B&amp;#43;t&amp;#39;China Map&amp;#39; -W1/1p -N1/1p -LjBR&amp;#43;c20&amp;#43;o1c/1c&amp;#43;f&amp;#43;w1000k&amp;#43;u -F&amp;#43;glightblue -X12c -K -O &amp;gt;&amp;gt; $PS
+
+gmt psxy -J$J -R$R -O -T &amp;gt;&amp;gt; $PS
+
+# ps2raster 改为 psconvert
+gmt psconvert -A -P -Tf $PS
+
+# 临时文件的文件名变化
+rm gmt.conf gmt.history
+&lt;/code&gt;&lt;/pre&gt;
+
+
+
+&lt;h2 id=&#34;gmt6&#34;&gt;GMT6&lt;/h2&gt;
+
+&lt;p&gt;GMT6 尚未发布，但 GMT6 完全兼容 GMT5。上面的 GMT5 绘图脚本可以不做任何修改地在
+GMT6 下使用。除此之外，GMT6 还引入了一种全新的“现代模式”，大大简化了脚本。&lt;/p&gt;
+
+&lt;p&gt;GMT6 相对于 GMT5 做了大量简化，列举如下：&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;所有命令都不再需要 &lt;code&gt;-K&lt;/code&gt; &lt;code&gt;-O&lt;/code&gt;，也不需要使用 &lt;code&gt;&amp;gt;&lt;/code&gt; 或 &lt;code&gt;&amp;gt;&amp;gt;&lt;/code&gt; 重定向到 PS 文件，
+用户完全不需要意识到 PS 文件的存在&lt;/li&gt;
+&lt;li&gt;只要前面的命令使用过 &lt;code&gt;-J&lt;/code&gt; 和 &lt;code&gt;-R&lt;/code&gt;，则后面的命令不再需要重复 &lt;code&gt;-J&lt;/code&gt;、&lt;code&gt;-R&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;以 &lt;code&gt;gmt begin&lt;/code&gt; 开始一张绘图，以 &lt;code&gt;gmt end&lt;/code&gt; 结束一张绘图&lt;/li&gt;
+&lt;li&gt;使用 &lt;code&gt;gmt begin&lt;/code&gt; 时可以指定要生成的图片的文件名以及多种格式&lt;/li&gt;
+&lt;li&gt;命令名有微调（虽然有变化，但旧命令依然可以使用！）
+
+&lt;ul&gt;
+&lt;li&gt;以 &lt;code&gt;ps&lt;/code&gt; 开头的命令均省略了 &lt;code&gt;ps&lt;/code&gt;，比如 &lt;code&gt;psbasemap&lt;/code&gt; 变成 &lt;code&gt;basemap&lt;/code&gt;、
+&lt;code&gt;pscoast&lt;/code&gt; 变成 &lt;code&gt;coast&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;几个特例： &lt;code&gt;psxy&lt;/code&gt; 变成 &lt;code&gt;plot&lt;/code&gt;，&lt;code&gt;psscale&lt;/code&gt; 变成 &lt;code&gt;colorbar&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;执行 &lt;code&gt;gmt end&lt;/code&gt; 时自动根据 &lt;code&gt;gmt begin&lt;/code&gt; 中的设置生成多种格式的图片&lt;/li&gt;
+&lt;li&gt;不再需要手动清理 &lt;code&gt;gmt.conf&lt;/code&gt; 和 &lt;code&gt;gmt.history&lt;/code&gt; 等临时文件&lt;/li&gt;
+&lt;/ul&gt;
+
+
+
+
+                          
+
+&lt;pre&gt;&lt;code class=&#34;language-bash line-numbers&#34;&gt;#!/bin/bash
+
+# gmt begin 指定图片名为 gmt-map，指定图片格式为pdf、png和jpg
+gmt begin gmt-map pdf,png,jpg
+gmt set FONT_TITLE=24p,Helvetica-Bold
+
+# psbasemap -&amp;gt; basemap
+# 省略 -K -O &amp;gt;&amp;gt; xxx.ps
+gmt basemap -JX10c/10c -R0/10/0/10 -Bxaf&amp;#43;lX&amp;#43;u&amp;#39; km&amp;#39; -Byaf&amp;#43;p&amp;#39;$ &amp;#39;&amp;#43;lY -BWSen&amp;#43;t&amp;#34;Simple Basemap&amp;#34;
+
+# psxy -&amp;gt; plot
+# 省略 -J -R -K -O &amp;gt;&amp;gt; xxx.ps
+gmt plot -Sa1c -Gred@70 &amp;lt;&amp;lt; EOF
+1 1
+2 2
+EOF
+gmt plot -W1p &amp;lt;&amp;lt; EOF
+&amp;gt; -W2p,red
+3 3
+3.5 4
+&amp;gt; -W2p,blue,-
+4 4
+4 6
+EOF
+gmt plot -Sv0.4c&amp;#43;e -Gred &amp;lt;&amp;lt; EOF
+5 5 30 1
+EOF
+
+# pscoast -&amp;gt; coast
+# 省略 -K -O &amp;gt;&amp;gt; xxx.ps
+# 此处绘制了新底图，所以需要再次指定 -J -R
+gmt coast -JM105/35/12.4c -R70/138/13/56 -Df -A1000 -Baf -B&amp;#43;t&amp;#39;China Map&amp;#39; -W1/1p -N1/1p -LjBR&amp;#43;c20&amp;#43;o1c/1c&amp;#43;f&amp;#43;w1000k&amp;#43;u -F&amp;#43;glightblue -X12c
+
+# gmt end自动生成多种格式的图片
+gmt end
+&lt;/code&gt;&lt;/pre&gt;
+
+
+</description>
+    </item>
+    
+    <item>
+      <title>绘制含地形起伏的地震剖面图</title>
+      <link>https://gmt-china.org/example/ex019/</link>
+      <pubDate>Sat, 07 Apr 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://gmt-china.org/example/ex019/</guid>
+      <description>&lt;p&gt;&lt;i class=&#34;fas fa-download&#34;&gt;&lt;/i&gt;
+&lt;a href=&#34;https://gmt-china.org/example/ex019/event.loc.info&#34;&gt;震中位置数据&lt;/a&gt; |
+&lt;a href=&#34;https://gmt-china.org/example/ex019/beachballs.info&#34;&gt;机制解数据&lt;/a&gt; |
+&lt;a href=&#34;https://gmt-china.org/example/ex019/elev.csv&#34;&gt;海拔数据&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;本文展示了如何同时绘制沿着垂直剖面的海拔变化图、地震分布及震源机制图。&lt;/p&gt;
+
+&lt;p&gt;Bash 绘图脚本如下:&lt;/p&gt;
+
+
+
+
+
+
+&lt;ul class=&#34;nav nav-tabs&#34;&gt;
+  &lt;li class=&#34;nav-item gmt-code-tab disable&#34;&gt;&lt;i class=&#34;fas fa-code&#34;&gt;&lt;/i&gt; profile&lt;/li&gt;
+  
+  
+  
+  
+  &lt;li class=&#34;nav-item&#34;&gt;
+      &lt;a class=&#34;gmt-code-tab active&#34; data-toggle=&#34;tab&#34; href=&#34;#profile_GMT6_sh&#34;&gt;GMT6+sh &lt;/a&gt;
+  &lt;/li&gt;
+  
+  
+  
+  &lt;li class=&#34;nav-item&#34;&gt;
+      &lt;a class=&#34;gmt-code-tab &#34; data-toggle=&#34;tab&#34; href=&#34;#profile_GMT5_sh&#34;&gt;GMT5+sh &lt;/a&gt;
+  &lt;/li&gt;
+  
+  
+&lt;/ul&gt;
+
+&lt;div class=&#34;tab-content&#34;&gt;
+  
+  
+  
+  
+  &lt;div class=&#34;tab-pane fade active show&#34; id=&#34;profile_GMT6_sh&#34;&gt;
+  &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#!/bin/bash
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;
+gmt begin profile png
+
+R&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;/11/0/700
+J&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;X5i/-2i
+
+eqfile&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;event.loc.info
+nearloc&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;near.loc
+beachballs&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;beachballs.info
+elev&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;elev.csv
+
+gmt set MAP_FRAME_TYPE plain MAP_FRAME_PEN &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;.4p
+gmt set FONT_TITLE 5p MAP_TITLE_OFFSET 8p
+gmt set MAP_ANNOT_OFFSET_PRIMARY 2p FONT_ANNOT_PRIMARY 12p,Times-Roman
+gmt set MAP_TICK_LENGTH_PRIMARY 3p FONT_LABEL 12p MAP_GRID_PEN_PRIMARY &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;.2p,gray,--
+gmt set FORMAT_GEO_MAP&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;ddd:mm:ssF
+
+&lt;span style=&#34;color:#75715e&#34;&gt;# 绘制底图&lt;/span&gt;
+gmt basemap -R0/11/0/700 -JX5i/-2i -BWS -Bya200f100+l&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Focal depth (km)&amp;#34;&lt;/span&gt; -Bxa2f1+l&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Distance&amp;#34;&lt;/span&gt;+u&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;\260&amp;#34;&lt;/span&gt;
+gmt basemap -BWSen
+
+&lt;span style=&#34;color:#75715e&#34;&gt;# 测线： (130.5,43.5)为起点，(142.5,36.5) 为终点&lt;/span&gt;
+&lt;span style=&#34;color:#75715e&#34;&gt;# 筛选出距离测线+-1度以内的地震事件&lt;/span&gt;
+gmt project $eqfile -C130.5/43.5 -E142.5/36.5 -Fxyzpq -W-1/1 &amp;gt; $nearloc
+&lt;span style=&#34;color:#75715e&#34;&gt;# 分深度绘制地震&lt;/span&gt;
+awk &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;$4&amp;gt;=0 &amp;amp;&amp;amp; $4&amp;lt;70 {print $5,$4,$3*0.03}&amp;#39;&lt;/span&gt; $nearloc | gmt plot -Sc -Gpurple -W0.1p,black
+awk &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;$4&amp;gt;=70 &amp;amp;&amp;amp; $4&amp;lt;300 {print $5,$4,$3*0.04}&amp;#39;&lt;/span&gt; $nearloc | gmt plot -Sc -Ggreen -W0.1p,black
+awk &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;$4&amp;gt;=300 &amp;amp;&amp;amp; $4&amp;lt;1000 {print $5,$4,$3*0.05}&amp;#39;&lt;/span&gt; $nearloc | gmt plot -Sc -Gred -W0.1p,black
+
+&lt;span style=&#34;color:#75715e&#34;&gt;# 在剖面上绘制部分事件的震源机制&lt;/span&gt;
+gmt coupe $beachballs -B -Q -L -Sd0.3 -Aa130.5/43.5/142.5/36.5/90/100/0/700f -Gblack
+
+&lt;span style=&#34;color:#75715e&#34;&gt;# 绘制图例&lt;/span&gt;
+gmt legend -DjBR+w1.2i+l1.2+o0.05i/0.04i -F+g255+p1p &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;lt;&amp;lt; EOF
+&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;G 0.01i
+&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;H 12 4 Event (M&amp;gt;4)
+&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;S 0.1i c 0.20 purple 0.1p,black 0.25i 0~70 km
+&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;S 0.1i c 0.20 green 0.1p,black 0.25i 70~300 km
+&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;S 0.1i c 0.20 red 0.1p,black 0.25i &amp;gt;300 km
+&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;EOF&lt;/span&gt;
+
+&lt;span style=&#34;color:#75715e&#34;&gt;# 绘制海拔剖面&lt;/span&gt;
+gmt basemap -R0/1300/-4000/2000 -JX5i/1i -Bya2000f1000+l&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Elevation (m)&amp;#34;&lt;/span&gt; -BW -Y2i
+&lt;span style=&#34;color:#75715e&#34;&gt;# 绘制剖面海拔&lt;/span&gt;
+gmt plot $elev -W0.5p,black -Ggray
+&lt;span style=&#34;color:#75715e&#34;&gt;# 绘制块体分界线&lt;/span&gt;
+gmt plot -W1p,black,- &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;lt;&amp;lt; EOF
+&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;gt;
+&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;102.7 -4000
+&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;102.7  2000
+&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;gt;
+&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;939 -4000
+&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;939 2000
+&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;gt;
+&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;1113 -4000
+&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;1113 2000
+&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;gt;
+&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;1300 -4000
+&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;1300 2000
+&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;EOF&lt;/span&gt;
+gmt text -N -F+f16p,blue &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;lt;&amp;lt; EOF
+&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;0 3000 A
+&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;1300 3000 B
+&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;600 1800 SOJP
+&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;1050 1800 JP
+&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;1200 1800 WP
+&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;EOF&lt;/span&gt;
+gmt end&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+  &lt;/div&gt;
+  
+  
+  
+  &lt;div class=&#34;tab-pane fade &#34; id=&#34;profile_GMT5_sh&#34;&gt;
+  &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#!/bin/bash
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;PS&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;profile.ps
+R&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;/11/0/700
+J&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;X5i/-2i
+
+eqfile&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;event.loc.info
+nearloc&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;near.loc
+beachballs&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;beachballs.info
+elev&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;elev.csv
+
+gmt set MAP_FRAME_TYPE plain MAP_FRAME_PEN &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;.4p
+gmt set FONT_TITLE 5p MAP_TITLE_OFFSET 8p
+gmt set MAP_ANNOT_OFFSET_PRIMARY 2p FONT_ANNOT_PRIMARY 12p,Times-Roman
+gmt set MAP_TICK_LENGTH_PRIMARY 3p FONT_LABEL 12p MAP_GRID_PEN_PRIMARY &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;.2p,gray,--
+gmt set FORMAT_GEO_MAP&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;ddd:mm:ssF
+
+&lt;span style=&#34;color:#75715e&#34;&gt;# 绘制底图&lt;/span&gt;
+gmt psbasemap -R$R -J$J -Bya200f100+l&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Focal depth (km)&amp;#34;&lt;/span&gt; -Bxa2f1+l&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Distance&amp;#34;&lt;/span&gt;+u&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;\260&amp;#34;&lt;/span&gt; -BWS -K &amp;gt; $PS
+gmt psbasemap -R -J -B0 -Bne -O -K &amp;gt;&amp;gt; $PS
+
+&lt;span style=&#34;color:#75715e&#34;&gt;# 测线： (130.5,43.5)为起点，(142.5,36.5) 为终点&lt;/span&gt;
+&lt;span style=&#34;color:#75715e&#34;&gt;# 筛选出距离测线+-1度以内的地震事件&lt;/span&gt;
+gmt project $eqfile -C130.5/43.5 -E142.5/36.5 -Fxyzpq -W-1/1 &amp;gt; $nearloc
+&lt;span style=&#34;color:#75715e&#34;&gt;# 分深度绘制地震&lt;/span&gt;
+awk &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;$4&amp;gt;=0 &amp;amp;&amp;amp; $4&amp;lt;70 {print $5,$4,$3*0.03}&amp;#39;&lt;/span&gt; $nearloc | &lt;span style=&#34;color:#ae81ff&#34;&gt;\
+&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt;	                      gmt psxy -R -J -Sc -Gpurple -W0.1p,black -O -K &amp;gt;&amp;gt; $PS
+awk &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;$4&amp;gt;=70 &amp;amp;&amp;amp; $4&amp;lt;300 {print $5,$4,$3*0.04}&amp;#39;&lt;/span&gt; $nearloc |&lt;span style=&#34;color:#ae81ff&#34;&gt;\
+&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt;                          gmt psxy -R -J -Sc -Ggreen -W0.1p,black -K -O &amp;gt;&amp;gt; $PS
+awk &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#39;$4&amp;gt;=300 &amp;amp;&amp;amp; $4&amp;lt;1000 {print $5,$4,$3*0.05}&amp;#39;&lt;/span&gt; $nearloc |&lt;span style=&#34;color:#ae81ff&#34;&gt;\
+&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt;                          gmt psxy -R -J -Sc -Gred -W0.1p,black -O -K &amp;gt;&amp;gt; $PS
+
+&lt;span style=&#34;color:#75715e&#34;&gt;# 在剖面上绘制部分事件的震源机制&lt;/span&gt;
+gmt pscoupe $beachballs -R -J -B -Q -L -Sd0.3 -Aa130.5/43.5/142.5/36.5/90/100/0/700f &lt;span style=&#34;color:#ae81ff&#34;&gt;\
+&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;&lt;/span&gt;                         -Gblack -O -K &amp;gt;&amp;gt; $PS
+
+&lt;span style=&#34;color:#75715e&#34;&gt;# 绘制图例&lt;/span&gt;
+gmt pslegend -R -J -DjBR+w1.2i+l1.2+o0.05i/0.04i -F+g255+p0.25p -O -K &amp;gt;&amp;gt; $PS &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;lt;&amp;lt; EOF
+&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;G 0.01i
+&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;H 12 4 Event (M&amp;gt;4)
+&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;S 0.1i c 0.20 purple 0.1p,black 0.25i 0~70 km
+&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;S 0.1i c 0.20 green 0.1p,black 0.25i 70~300 km
+&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;S 0.1i c 0.20 red 0.1p,black 0.25i &amp;gt;300 km
+&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;EOF&lt;/span&gt;
+
+&lt;span style=&#34;color:#75715e&#34;&gt;# 绘制海拔剖面&lt;/span&gt;
+elevR&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;/1300/-4000/2000
+elevJ&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;X5i/1i
+gmt psbasemap -R$elevR -J$elevJ -Bya2000f1000+l&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Elevation (m)&amp;#34;&lt;/span&gt; -Bx0 -BW -Y2i -O -K &amp;gt;&amp;gt; $PS
+
+&lt;span style=&#34;color:#75715e&#34;&gt;# 绘制剖面海拔&lt;/span&gt;
+gmt psxy $elev -W0.5p,black -J -Ggray -R -O -K &amp;gt;&amp;gt; $PS
+&lt;span style=&#34;color:#75715e&#34;&gt;# 绘制块体分界线&lt;/span&gt;
+gmt psxy -W1p,black,- -J -R -O -K &amp;gt;&amp;gt; $PS &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;lt;&amp;lt;EOF
+&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;gt;
+&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;102.7 -4000
+&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;102.7  2000
+&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;gt;
+&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;939 -4000
+&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;939 2000
+&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;gt;
+&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;1113 -4000
+&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;1113 2000
+&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;gt;
+&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;1300 -4000
+&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;1300 2000
+&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;EOF&lt;/span&gt;
+gmt pstext -N -J -R -F+f16p,blue -O &amp;gt;&amp;gt; $PS &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;lt;&amp;lt; EOF
+&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;0 3000 A
+&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;1300 3000 B
+&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;600 1800 SOJP
+&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;1050 1800 JP
+&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;1200 1800 WP
+&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;EOF&lt;/span&gt;
+
+gmt psconvert $PS -A -Tg -E360 -P -Z
+rm gmt.*&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+  &lt;/div&gt;
+  
+  
+&lt;/div&gt;
+
+
+&lt;p&gt;绘图效果如下:&lt;/p&gt;
+
+
+
+
+&lt;figure&gt;
+
+&lt;img src=&#34;https://gmt-china.org/example/ex019/profile.png&#34; width=&#34;800px&#34; /&gt;
+
+
+
+&lt;figcaption data-pre=&#34;Figure &#34; data-post=&#34;:&#34; &gt;
+  &lt;h4&gt;剖面图绘制&lt;/h4&gt;
+  
+&lt;/figcaption&gt;
+
+&lt;/figure&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>将 Bash 脚本改成 Bat 脚本</title>
+      <link>https://gmt-china.org/blog/bash2bat/</link>
+      <pubDate>Sun, 01 Apr 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://gmt-china.org/blog/bash2bat/</guid>
+      <description>&lt;p&gt;社区提供的 GMT 绘图脚本多是基于 Linux 下的 bash 脚本，有相当一部分用户并不熟悉
+bash，因此有必要介绍如何将 bash 脚本改成 Windows 下可用的 bat 脚本。&lt;/p&gt;
+
+&lt;p&gt;简单来说，将 bash 脚本改成 bat 脚本需要注意以下几点：&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;注释符号： &lt;code&gt;#&lt;/code&gt; =&amp;gt; &lt;code&gt;rem&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;设置变量： &lt;code&gt;PS=MAP.PS&lt;/code&gt; =&amp;gt; &lt;code&gt;set PS=MAP.PS&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;引用变量： &lt;code&gt;$PS&lt;/code&gt; =&amp;gt; &lt;code&gt;%PS%&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;删除文件： &lt;code&gt;rm gmt.*&lt;/code&gt; =&amp;gt; &lt;code&gt;del gmt.*&lt;/code&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;使用编辑器搜索替换功能可以很方便地实现转换。
+比如搜索 &lt;code&gt;#&lt;/code&gt; 并全部替换为 &lt;code&gt;rem&lt;/code&gt;，搜索 &lt;code&gt;$PS&lt;/code&gt;、&lt;code&gt;$R&lt;/code&gt;、&lt;code&gt;$J&lt;/code&gt;
+分别替换为 &lt;code&gt;%PS%&lt;/code&gt;、&lt;code&gt;%R%&lt;/code&gt;、&lt;code&gt;%J%&lt;/code&gt;。&lt;/p&gt;
+
+&lt;p&gt;当然还有一些比较复杂的语句就需要你对 bat 脚本语言比较熟悉。&lt;/p&gt;
+
+&lt;p&gt;比如 bash 下的嵌套命令可以将一条命令的结果作为变量使用：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;T1=$(gmt grdinfo world6m.grd -T1000)
+gmt makecpt -Crainbow $T1 &amp;gt; 1.cpt
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;而在 bat 下可以用如下两种方法来实现：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bat&#34;&gt;rem 方法1
+for /f %%i in (&#39;gmt grdinfo world6m.grd -T1000&#39;) do set T1=%%i
+gmt makecpt -Crainbow %T1% &amp;gt; 1.cpt
+
+rem 方法2
+gmt grdinfo world6m.grd -T1000 &amp;gt; tmp.txt
+set /p T1=&amp;lt;tmp.txt
+gmt makecpt -Crainbow %T1% &amp;gt; 1.cpt
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;再比如 bash 下可以非常方便的进行多段文本的输入&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;# 被 EOF 包起来的几行文本将作为 gmt psxy 的输入
+gmt psxy -R -J -Sc0.5c -Gred -W0.5p,black -K -O &amp;lt;&amp;lt; EOF &amp;gt;&amp;gt; $PS
+112.35 36.56
+113.78 42.15
+114.50 37.60
+EOF
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;在 bat 下则只能将两行文本先写入到文本中，再将文本作为命令的输入&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bat&#34;&gt;echo 112.35 36.56 &amp;gt; tmp
+echo 113.78 42.15 &amp;gt;&amp;gt; tmp
+echo 114.50 37.60 &amp;gt;&amp;gt; tmp
+gmt psxy tmp -R -J -Sc0.5c -Gred -W0.5p,black -O -K &amp;gt;&amp;gt; %PS%
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;最后，如果脚本中出现了 grep、cut、wc、cat 等命令，可以下载社区提供的
+&lt;a href=&#34;https://gmt-china.org/blog/unix-tools-for-windows/&#34;&gt;UnixTools&lt;/a&gt;
+工具包并解压缩到 GMT 安装路径的 bin 目录下，需要注意的是 bash 脚本中的 awk
+需要更改为 gawk，同时单引号需要改为双引号。&lt;/p&gt;
+
+&lt;p&gt;下面给出一个简单的 bash 脚本：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;#!bin/bash
+PS=example.ps
+# 设置经纬度范围
+R=-R108/125/33/43
+# 设置投影方式
+J=-JM6i
+# 绘制底图
+gmt psbasemap $R $J -B3 -K &amp;gt; $PS
+T1=$(gmt grdinfo huabei.grd -T100)
+gmt makecpt -Ctopo $T1 &amp;gt; huabei.cpt
+# 绘制华北地形
+gmt grdimage -R -J huabei.grd -Chuabei.cpt -K -O &amp;gt;&amp;gt; $PS
+# 绘制台站分布
+gmt psxy -R -J -St0.5c -Gblack -K -O &amp;gt;&amp;gt; $PS &amp;lt;&amp;lt; EOF
+112 36
+120 40
+115 39
+EOF
+
+# 绘制 event.dat 中地震，从第二行开始提取第 4 列作为经度，提取第 3 列作为纬度
+awk &#39;{if (NR&amp;gt;1) print $4,$3}&#39; event.dat | gmt psxy -R -J -Sc0.4c -Gblack -O &amp;gt;&amp;gt; $PS
+# 删除临时文件
+rm gmt.* huabei.cpt
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;按照上述方法修改成的 bat 脚本如下：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bat&#34;&gt;set PS=example.ps
+rem 设置经纬度范围
+set R=-R108/125/33/43
+rem 设置投影方式
+set J=-JM6i
+rem 绘制底图
+gmt psbasemap %R% %J% -B3 -K &amp;gt; %PS%
+for /f %%i in (&#39;gmt grdinfo huabei.grd -T100&#39;) do set T1=%%i
+gmt makecpt -Ctopo %T1% &amp;gt; huabei.cpt
+rem 绘制华北地形
+gmt grdimage -R -J huabei.grd -Chuabei.cpt -K -O &amp;gt;&amp;gt; %PS%
+rem 绘制台站分布
+echo 112 36 &amp;gt; tmp
+echo 120 40 &amp;gt;&amp;gt; tmp
+echo 115 39 &amp;gt;&amp;gt; tmp
+gmt psxy tmp -R -J -St0.5c -Gblack -K -O &amp;gt;&amp;gt; %PS%
+
+rem 绘制 event.dat 中地震，从第二行开始提取第 4 列作为经度，提取第 3 列作为纬度
+gawk &amp;quot;{if (NR&amp;gt;1) print $4,$3}&amp;quot; event.dat | gmt psxy -R -J -Sc0.4c -Gblack -O &amp;gt;&amp;gt; %PS%
+rem 删除临时文件
+del gmt.* huabei.cpt tmp
+&lt;/code&gt;&lt;/pre&gt;</description>
+    </item>
+    
+    <item>
+      <title>GMT自带中国国界问题</title>
+      <link>https://gmt-china.org/blog/china-border-issues/</link>
+      <pubDate>Sat, 17 Mar 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://gmt-china.org/blog/china-border-issues/</guid>
+      <description>
+
+&lt;p&gt;众所周知，中国与周边国家或地区之间存在领土争议，这是一个很敏感的政治问题。&lt;/p&gt;
+
+&lt;p&gt;对于地学相关的科研工作者而言，在正式出版的中外期刊上发表带有中国国界的地图时需要
+格外注意。最简单的方法就是只绘制海岸线不绘制国界，以避免任何国界带来的可能争议。&lt;/p&gt;
+
+&lt;h2 id=&#34;中国地图注意事项&#34;&gt;中国地图注意事项&lt;/h2&gt;
+
+&lt;p&gt;2017年国家测绘地理信息局发布的《“问题地图”清查工作指南》中列出了绘图中应避免的
+若干错误。下面列出了绘制中国全图时的常见注意事项：&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;阿克赛钦地区正确表示&lt;/li&gt;
+&lt;li&gt;藏南地区正确表示&lt;/li&gt;
+&lt;li&gt;钓鱼岛、赤尾屿位置正确&lt;/li&gt;
+&lt;li&gt;南海诸岛各岛点位置正确&lt;/li&gt;
+&lt;li&gt;台湾省底色设置与大陆一致&lt;/li&gt;
+&lt;li&gt;&amp;hellip;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h2 id=&#34;gmt自带中国国界的问题&#34;&gt;GMT自带中国国界的问题&lt;/h2&gt;
+
+&lt;p&gt;目前已知的几套国界数据包括：&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://docs.gmt-china.org/latest/dataset/gshhg/&#34; target=&#34;_blank&#34;&gt;GMT自带的GSHHG数据&lt;/a&gt;：全球海岸线、国界、部分省/州界数据&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://docs.gmt-china.org/latest/dataset/dcw/&#34; target=&#34;_blank&#34;&gt;GMT自带的DCW数据&lt;/a&gt;：全球行政区划数据，包含洲界、国界、省界&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://docs.gmt-china.org/latest/dataset/gadm/&#34; target=&#34;_blank&#34;&gt;GADM数据&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;社区提供的一套&lt;a href=&#34;https://gmt-china.org/example/ex003&#34;&gt;相对准确的国界、省界数据&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;下面的脚本绘制了DCW数据和社区提供的国界数据进行对比。&lt;/p&gt;
+
+&lt;p&gt;绘图脚本：&lt;/p&gt;
+
+
+
+
+                          
+
+&lt;pre&gt;&lt;code class=&#34;language-bash line-numbers&#34;&gt;#!/bin/bash
+R=70/138/3/54
+J=M105/35/6.5i
+PS=CN-border.ps
+
+gmt psxy -J$J -R$R -T -K &amp;gt; $PS
+
+# GSHHG 数据
+#gmt pscoast -J$J -R$R -Df -A10000 -Na/0.5p,gray -W1p,gray -K -O &amp;gt;&amp;gt; $PS
+
+# DCW 数据
+gmt pscoast -J$J -R$R -Df -ECN,TW&amp;#43;p1p,blue@50 -K -O &amp;gt;&amp;gt; $PS
+
+# 社区数据
+gmt psxy CN-border-L1.dat -J$J -R$R -W1p,red@50 -K -O &amp;gt;&amp;gt; $PS
+
+gmt psxy -J$J -R$R -T -O &amp;gt;&amp;gt; $PS
+gmt psconvert -A -P -Tg $PS -Z
+&lt;/code&gt;&lt;/pre&gt;
+
+
+
+&lt;p&gt;绘图结果如下，其中蓝色边界来自DCW数据，红色边界来自社区数据。&lt;/p&gt;
+
+
+
+
+&lt;figure&gt;
+
+&lt;img src=&#34;https://gmt-china.org/blog/china-border-issues/CN-border.png&#34; /&gt;
+
+
+
+&lt;figcaption data-pre=&#34;Figure &#34; data-post=&#34;:&#34; &gt;
+  &lt;h4&gt;中国国界对比图&lt;/h4&gt;
+  
+&lt;/figcaption&gt;
+
+&lt;/figure&gt;
+
+&lt;p&gt;从上图中可以看出，阿克赛钦地区、藏南地区边界均存在明显差异，其他地方也存在微小差异。&lt;/p&gt;
+
+&lt;p&gt;在涉及到这些区域时应格外注意。需要提供的是，社区提供的国界数据并不能保证完全
+正确，若用户也更为权威的国界数据，欢迎共享。&lt;/p&gt;
+
+&lt;h2 id=&#34;参考&#34;&gt;参考&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://www.iap.cas.cn/xwzx/tzgg/201709/P020170911372769133133.pdf&#34; target=&#34;_blank&#34;&gt;“问题地图”清查工作指南&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>GMT5在Windows下提示无法创建用户目录的解决办法</title>
+      <link>https://gmt-china.org/blog/user-directory-warning/</link>
+      <pubDate>Fri, 27 Oct 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://gmt-china.org/blog/user-directory-warning/</guid>
+      <description>&lt;p&gt;GMT5的某些版本（&amp;lt;5.4.4）在某些特定的Windows下会出现如下警告信息：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;gmt: Unable to create GMT User directory : /Users/用户名/.gmt
+gmt: Auto-downloading of earth_relief_##m|s.grd files has been disabled.
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;这是一个Windows特有，但又不是所有人都会遇到的一个问题。出现该警告信息的本质原因
+在于，当前系统没有定义环境变量 &lt;code&gt;HOME&lt;/code&gt;，进而导致GMT无法知道当前计算机的主目录的
+具体位置。&lt;/p&gt;
+
+&lt;p&gt;虽然大部分情况下并不影响程序的正常运行，但总是出现这些警告信息真的有点难受。
+解决办法是：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;1、打开 “我的电脑”-&amp;gt;“属性”-&amp;gt;“高级系统设置”-&amp;gt;“环境变量”
+2、新建 “系统变量”
+     变量名： HOME
+     变量值： C:\Users\用户名
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;重新运行GMT检查问题是否得到解决，可能需要重启计算机。&lt;/p&gt;
+
+&lt;p&gt;经测试，&lt;code&gt;HOME&lt;/code&gt; 变量的值可以取任意盘符中任何已存在的文件夹，正常情况下，
+执行脚本后会生成 &lt;code&gt;%HOME%/.gmt/cache&lt;/code&gt; 空文件夹。&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>GMT 中文社区第三次线下聚餐</title>
+      <link>https://gmt-china.org/blog/gud-20171017/</link>
+      <pubDate>Tue, 17 Oct 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://gmt-china.org/blog/gud-20171017/</guid>
+      <description>&lt;p&gt;金秋十月，秋高气爽，雁过留声。GMT 中文社区在北京成功举办了第三次线下聚餐活动。&lt;/p&gt;
+
+&lt;p&gt;2017 年 CGU 年会届时举行，全国同行汇集首都北京国际会议中心，我们借此机会齐聚一堂。
+个别同学本来表示由于时间原因或距离问题无法参会，最终还是觉得机会难得克服各种困难
+先后赶到。最终，13 位 GMTers 进行了一次成功的“网友见面会”。&lt;/p&gt;
+
+&lt;p&gt;在聚会上，本来活跃在 QQ 群里的大家面对面相互认识和了解了彼此的学习经历和科研方向，
+除了探讨了 GMT 学习、社区发展，还聊到了地震预报预警、防震减灾和地震学家如何对
+公众进行地震科普等问题。不仅如此，本次聚会大家还进行了一些简单的跨学科交流，
+桌上言谈之间对于自然科学研究及探索的热情和勇气溢于言表。&lt;/p&gt;
+
+&lt;p&gt;希望通过本次聚会我们能更加熟悉和了解该领域各个研究方向的同学，彼此保持
+更密切的联络，在科研道路上相互交流、积极互助。&lt;/p&gt;
+
+&lt;p&gt;科研道路上，知己天涯若比邻，期待下次再聚~&lt;/p&gt;
+
+
+
+
+&lt;figure&gt;
+
+&lt;img src=&#34;GUD-20171017-1.jpg&#34; /&gt;
+
+
+&lt;/figure&gt;
+
+
+
+
+&lt;figure&gt;
+
+&lt;img src=&#34;GUD-20171017-2.jpg&#34; /&gt;
+
+
+
+&lt;figcaption data-pre=&#34;Figure &#34; data-post=&#34;:&#34; &gt;
+  &lt;h4&gt;从左至右依次为：章浩东（中科院地质与地球物理所）、王志伟（地震局地质研究所）、王少卿（地震局地球物理所）、 张琰（地震局地球物理所）、张周（广州地化所）、徐荟（地震局地球物理所）、王亮（成都理工）、杨晓瑜（地震局地球物理所）、李佳威（地震局地球物理所+北大）、神秘人、田冬冬（中科大）、任昱（南海所）、方洪健（中科大）、胡少乾（中科大）&lt;/h4&gt;
+  
+&lt;/figcaption&gt;
+
+&lt;/figure&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>矢量及应力应变张量绘制</title>
+      <link>https://gmt-china.org/example/ex017/</link>
+      <pubDate>Fri, 13 Oct 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://gmt-china.org/example/ex017/</guid>
+      <description>&lt;p&gt;&lt;i class=&#34;fas fa-download&#34;&gt;&lt;/i&gt;
+&lt;a href=&#34;https://gmt-china.org/example/ex017/velo.gmt&#34;&gt;速度矢量&lt;/a&gt; |
+&lt;a href=&#34;https://gmt-china.org/example/ex017/slab.gmt&#34;&gt;板块位置&lt;/a&gt; |
+&lt;a href=&#34;https://gmt-china.org/example/ex017/stresstensor.gmt&#34;&gt;应力张量&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;本文绘制了速度矢量和应力应变张量主轴&lt;/p&gt;
+
+&lt;p&gt;Bash 绘图脚本如下:&lt;/p&gt;
+
+
+
+
+
+
+&lt;ul class=&#34;nav nav-tabs&#34;&gt;
+  &lt;li class=&#34;nav-item gmt-code-tab disable&#34;&gt;&lt;i class=&#34;fas fa-code&#34;&gt;&lt;/i&gt; subslab&lt;/li&gt;
+  
+  
+  
+  
+  &lt;li class=&#34;nav-item&#34;&gt;
+      &lt;a class=&#34;gmt-code-tab active&#34; data-toggle=&#34;tab&#34; href=&#34;#subslab_GMT6_sh&#34;&gt;GMT6+sh &lt;/a&gt;
+  &lt;/li&gt;
+  
+  
+  
+  &lt;li class=&#34;nav-item&#34;&gt;
+      &lt;a class=&#34;gmt-code-tab &#34; data-toggle=&#34;tab&#34; href=&#34;#subslab_GMT5_sh&#34;&gt;GMT5+sh &lt;/a&gt;
+  &lt;/li&gt;
+  
+  
+&lt;/ul&gt;
+
+&lt;div class=&#34;tab-content&#34;&gt;
+  
+  
+  
+  
+  &lt;div class=&#34;tab-pane fade active show&#34; id=&#34;subslab_GMT6_sh&#34;&gt;
+  &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#!/usr/bin/env sh
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;
+gmt begin subslab png
+ps&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;subslab.ps
+J&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;X-4i/-4i
+R&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;/400/0/400
+I&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;10&lt;/span&gt;/10
+
+&lt;span style=&#34;color:#75715e&#34;&gt;# 绘制底图&lt;/span&gt;
+gmt basemap -R$R -JX-4i/-4i -Bxaf+l&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;X [km]&amp;#34;&lt;/span&gt; -Byaf+l&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Depth [km]&amp;#34;&lt;/span&gt; -BEnSw+t&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Mantle Velocity&amp;#34;&lt;/span&gt;
+
+&lt;span style=&#34;color:#75715e&#34;&gt;# 将向量在 x, y 方向上的投影转换为网格化文件&lt;/span&gt;
+gmt xyz2grd velo.gmt -R$R -i0,1,2 -I$I -GU.nc
+gmt xyz2grd velo.gmt -R$R -I$I -i0,1,3 -GV.nc
+
+&lt;span style=&#34;color:#75715e&#34;&gt;# 绘制矢量&lt;/span&gt;
+&lt;span style=&#34;color:#75715e&#34;&gt;# -Q 设置矢量属性&lt;/span&gt;
+&lt;span style=&#34;color:#75715e&#34;&gt;# -G 设置向量内部颜色填充&lt;/span&gt;
+&lt;span style=&#34;color:#75715e&#34;&gt;# -W 设置绘制矢量外边画笔的属性&lt;/span&gt;
+&lt;span style=&#34;color:#75715e&#34;&gt;# -S 设置向量值和图上距离的换算关系 e.g 50i-50个向量单位的距离在图上绘制为1英寸&lt;/span&gt; 
+gmt grdvector U.nc V.nc -I10 -Q0.1i+e+n0.25i+h0.5 -Gblack -W1p -S50i
+
+&lt;span style=&#34;color:#75715e&#34;&gt;# 绘制图例&lt;/span&gt;
+gmt legend -F+gwhite+p0.2p,black -Dx4i/0i+w1.3i/0.6i+jBR+l1.2 -C0.2i/0.1i &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;lt;&amp;lt; EOF
+&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;S 0.1i v0.02i+a40+e 0.1i black 0.1p 0.2i 5 cm/year
+&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;S 0.1i - 0.2i - 0.8p,blue,- 0.3i Slab
+&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;EOF&lt;/span&gt;
+
+&lt;span style=&#34;color:#75715e&#34;&gt;# 绘制板块下插边界&lt;/span&gt;
+gmt plot slab.gmt -W0.8p,blue,-
+echo &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;(a)&amp;#34;&lt;/span&gt; | gmt text -F+cTL+f11p,Times-Roman -D-0.56i/1c -N
+
+gmt basemap -Bxaf+l&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;X [km]&amp;#34;&lt;/span&gt; -Byaf+l&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Depth [km]&amp;#34;&lt;/span&gt;  -BEnSw+t&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Main strain distribution&amp;#34;&lt;/span&gt; -X5.6i
+gmt plot slab.gmt  -W0.8p,blue,-
+
+
+&lt;span style=&#34;color:#75715e&#34;&gt;# 绘制应力张量主应力大小及方向&lt;/span&gt;
+&lt;span style=&#34;color:#75715e&#34;&gt;# -Sx 表示绘制主应力/应变大小与方向, 后面数值表示1单位待绘制物理量在图上的长度&lt;/span&gt;
+&lt;span style=&#34;color:#75715e&#34;&gt;#     本例中表示图上 0.01i 长度表示的应力大小为 1 Mpa&lt;/span&gt;
+&lt;span style=&#34;color:#75715e&#34;&gt;# -A2p+jc  表示矢量属性,设置箭头大小和设置矢量与输入x,y坐标的关系&lt;/span&gt;
+&lt;span style=&#34;color:#75715e&#34;&gt;# 输入文件格式:&lt;/span&gt;
+&lt;span style=&#34;color:#75715e&#34;&gt;#       横坐标, 竖坐标, 应力张量扩张特征值[扩张为正], 压缩特征值, 压缩特征值对应矢量与正北方向夹角&lt;/span&gt; 
+gmt velo stresstensor.gmt -Sx0.01i -W0.1p,red -A2p+jc
+gmt legend -F+gwhite+p0.2p,black -Dx4i/0i+w1i/0.6i+jBR+l1.2 -C0.2i/0.1i &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;lt;&amp;lt; EOF
+&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;S 0.1i v2p+e+p0.1p,red 0.1i red 0.1p  0.2i 10 Mpa
+&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;S 0.1i - 0.2i - 0.8p,blue,- 0.3i Slab
+&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;EOF&lt;/span&gt;
+echo &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;(b)&amp;#34;&lt;/span&gt; | gmt text -F+cTL+f11p,Times-Roman -D-0.56i/1c -N
+
+rm *.nc
+gmt end&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+  &lt;/div&gt;
+  
+  
+  
+  &lt;div class=&#34;tab-pane fade &#34; id=&#34;subslab_GMT5_sh&#34;&gt;
+  &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#!/usr/bin/env sh
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;ps&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;subslab.ps
+J&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;X-4i/-4i
+R&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;/400/0/400
+I&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;&lt;span style=&#34;color:#ae81ff&#34;&gt;10&lt;/span&gt;/10
+
+&lt;span style=&#34;color:#75715e&#34;&gt;# 绘制底图&lt;/span&gt;
+gmt psbasemap -R$R -J$J -Bxaf+l&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;X [km]&amp;#34;&lt;/span&gt; -Byaf+l&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Depth [km]&amp;#34;&lt;/span&gt; -K -BEnSw+t&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Mantle Velocity&amp;#34;&lt;/span&gt; &amp;gt; $ps
+
+&lt;span style=&#34;color:#75715e&#34;&gt;# 将向量在 x, y 方向上的投影转换为网格化文件&lt;/span&gt;
+gmt xyz2grd   ./velo.gmt -R$R -i0,1,2 -I$I -GU.nc   
+gmt xyz2grd   ./velo.gmt -R$R -I$I -i0,1,3 -GV.nc
+
+&lt;span style=&#34;color:#75715e&#34;&gt;# 绘制矢量&lt;/span&gt;
+&lt;span style=&#34;color:#75715e&#34;&gt;# -Q 设置矢量属性&lt;/span&gt;
+&lt;span style=&#34;color:#75715e&#34;&gt;# -G 设置向量内部颜色填充&lt;/span&gt;
+&lt;span style=&#34;color:#75715e&#34;&gt;# -W 设置绘制矢量外边画笔的属性&lt;/span&gt;
+&lt;span style=&#34;color:#75715e&#34;&gt;# -S 设置向量值和图上距离的换算关系 e.g 50i-50个向量单位的距离在图上绘制为1英寸&lt;/span&gt; 
+gmt grdvector U.nc V.nc -R  -I10 -J -O -K -Q0.1i+e+n0.25i+h0.5 -Gblack -W1p -S50i -V &amp;gt;&amp;gt; $ps
+
+&lt;span style=&#34;color:#75715e&#34;&gt;# 绘制图例&lt;/span&gt;
+gmt pslegend -R -J -F+gwhite+p0.2p,black -Dx4i/0i+w1.3i/0.6i+jBR+l1.2 -C0.2i/0.1i -B -O -K -V &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;lt;&amp;lt; EOF &amp;gt;&amp;gt; $ps
+&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;S 0.1i v0.02i+a40+e 0.1i black 0.1p 0.2i 5 cm/year
+&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;S 0.1i - 0.2i - 0.8p,blue,- 0.3i Slab
+&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;EOF&lt;/span&gt;
+
+&lt;span style=&#34;color:#75715e&#34;&gt;# 绘制板块下插边界&lt;/span&gt;
+gmt psxy ./slab.gmt -B -J -W0.8p,blue,- -R -O -K &amp;gt;&amp;gt; $ps
+echo &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;(a)&amp;#34;&lt;/span&gt; | gmt pstext -B -J -R -F+cTL+f11p,Times-Roman -D-0.56i/1c -K -O -N &amp;gt;&amp;gt; $ps
+
+gmt psbasemap -R$R -J$J -Bxaf+l&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;X [km]&amp;#34;&lt;/span&gt; -Byaf+l&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Depth [km]&amp;#34;&lt;/span&gt; -V -K -O -BEnSw+t&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;Main strain distribution&amp;#34;&lt;/span&gt; -X5.6i &amp;gt;&amp;gt; $ps
+gmt psxy ./slab.gmt -B -J -W0.8p,blue,- -R -O -K -V&amp;gt;&amp;gt; $ps
+
+
+&lt;span style=&#34;color:#75715e&#34;&gt;# 绘制应力张量主应力大小及方向&lt;/span&gt;
+&lt;span style=&#34;color:#75715e&#34;&gt;# -Sx 表示绘制主应力/应变大小与方向, 后面数值表示1单位待绘制物理量在图上的长度&lt;/span&gt;
+&lt;span style=&#34;color:#75715e&#34;&gt;#     本例中表示图上 0.01i 长度表示的应力大小为 1 Mpa&lt;/span&gt;
+&lt;span style=&#34;color:#75715e&#34;&gt;# -A2p+jc  表示矢量属性,设置箭头大小和设置矢量与输入x,y坐标的关系&lt;/span&gt;
+&lt;span style=&#34;color:#75715e&#34;&gt;# 输入文件格式:&lt;/span&gt;
+&lt;span style=&#34;color:#75715e&#34;&gt;#       横坐标, 竖坐标, 应力张量扩张特征值[扩张为正], 压缩特征值, 压缩特征值对应矢量与正北方向夹角&lt;/span&gt; 
+gmt psvelo ./psveloStress.gmt -J -R -Sx0.01i -B -W0.1p,red -A2p+jc -K -O -V &amp;gt;&amp;gt; $ps
+gmt pslegend -R -J -F+gwhite+p0.2p,black -Dx4i/0i+w1i/0.6i+jBR+l1.2 -C0.2i/0.1i -B -O -K -V &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;lt;&amp;lt; EOF &amp;gt;&amp;gt; $ps
+&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;S 0.1i v2p+e+p0.1p,red 0.1i red 0.1p  0.2i 10 Mpa
+&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;S 0.1i - 0.2i - 0.8p,blue,- 0.3i Slab
+&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;EOF&lt;/span&gt;
+echo &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;(b)&amp;#34;&lt;/span&gt; | gmt pstext -B -J -R -F+cTL+f11p,Times-Roman -D-0.56i/1c -O -N &amp;gt;&amp;gt; $ps
+
+rm gmt.conf gmt.history *.nc&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+  &lt;/div&gt;
+  
+  
+&lt;/div&gt;
+
+
+&lt;p&gt;绘图效果如下:&lt;/p&gt;
+
+
+
+
+&lt;figure&gt;
+
+&lt;img src=&#34;https://gmt-china.org/example/ex017/subslab.png&#34; width=&#34;800px&#34; /&gt;
+
+
+
+&lt;figcaption data-pre=&#34;Figure &#34; data-post=&#34;:&#34; &gt;
+  &lt;h4&gt;矢量绘制示例&lt;/h4&gt;
+  
+&lt;/figcaption&gt;
+
+&lt;/figure&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>绘制自定义符号</title>
+      <link>https://gmt-china.org/example/ex018/</link>
+      <pubDate>Fri, 13 Oct 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://gmt-china.org/example/ex018/</guid>
+      <description>&lt;p&gt;GMT 官方目前内置了 40 个自定义符号，如下所示：&lt;/p&gt;
+
+
+
+
+&lt;figure&gt;
+
+&lt;img src=&#34;https://gmt-china.org/example/ex018/def.png&#34; width=&#34;750px&#34; /&gt;
+
+
+
+&lt;figcaption data-pre=&#34;Figure &#34; data-post=&#34;:&#34; &gt;
+  &lt;h4&gt;GMT 内置自定义符号&lt;/h4&gt;
+  
+&lt;/figcaption&gt;
+
+&lt;/figure&gt;
+
+&lt;p&gt;但是对于广大用户来说，这些自定义符号仍然远远无法满足需求。
+因此，社区在&lt;a href=&#34;https://github.com/gmt-china/GMT_custom_symbols&#34; target=&#34;_blank&#34;&gt;这里&lt;/a&gt;
+持续更新一些常用的但还没有被 GMT 官方内置的自定义符号。
+如果你觉得有其它实用的符号没有被包含进来，请向我们反馈，我们会酌情考虑。&lt;/p&gt;
+
+&lt;p&gt;GMT 在使用自定义符号时会按照顺序在如下目录中依次搜索自定义符号：&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;当前目录，即运行脚本所在目录&lt;/li&gt;
+&lt;li&gt;Linux和Mac用户：&lt;code&gt;~/.gmt/custom&lt;/code&gt;；Windows用户：&lt;code&gt;C:\Users\XXXX\.gmt\custom&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;$GMT_SHAREDIR/custom&lt;/code&gt; 目录&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;因而用户可以下载社区提供的自定义符号并复制到以上任一路径即可使用这些自定义符号。
+通常建议放在 &lt;code&gt;~/.gmt/custom&lt;/code&gt; 目录（Linux和Mac用户）或 &lt;code&gt;C:\Users\XXXX\.gmt\custom&lt;/code&gt; (Windows用户）
+下。&lt;/p&gt;
+
+&lt;p&gt;绘制自定义符号脚本如下：&lt;/p&gt;
+
+
+
+
+
+
+&lt;ul class=&#34;nav nav-tabs&#34;&gt;
+  &lt;li class=&#34;nav-item gmt-code-tab disable&#34;&gt;&lt;i class=&#34;fas fa-code&#34;&gt;&lt;/i&gt; custom_symbol&lt;/li&gt;
+  
+  
+  
+  
+  &lt;li class=&#34;nav-item&#34;&gt;
+      &lt;a class=&#34;gmt-code-tab active&#34; data-toggle=&#34;tab&#34; href=&#34;#custom_symbol_GMT5_sh&#34;&gt;GMT5+sh &lt;/a&gt;
+  &lt;/li&gt;
+  
+  
+&lt;/ul&gt;
+
+&lt;div class=&#34;tab-content&#34;&gt;
+  
+  
+  
+  
+  &lt;div class=&#34;tab-pane fade active show&#34; id=&#34;custom_symbol_GMT5_sh&#34;&gt;
+  &lt;div class=&#34;highlight&#34;&gt;&lt;pre style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4&#34;&gt;&lt;code class=&#34;language-sh&#34; data-lang=&#34;sh&#34;&gt;&lt;span style=&#34;color:#75715e&#34;&gt;#!/bin/bash
+&lt;/span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;&lt;/span&gt;ps&lt;span style=&#34;color:#f92672&#34;&gt;=&lt;/span&gt;custom_symbol.ps
+
+&lt;span style=&#34;color:#75715e&#34;&gt;# 绘制城市符号&lt;/span&gt;
+echo &lt;span style=&#34;color:#ae81ff&#34;&gt;3&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;5&lt;/span&gt; | gmt psxy -R0/10/0/10 -JM4i -B2 -Skcity/0.2i -W0.6p -K &amp;gt; $ps
+echo &lt;span style=&#34;color:#ae81ff&#34;&gt;5&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;5&lt;/span&gt; | gmt psxy -R -J -Skcity/0.3i -Gblue -K -O &amp;gt;&amp;gt; $ps
+echo &lt;span style=&#34;color:#ae81ff&#34;&gt;7&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;5&lt;/span&gt; | gmt psxy -R -J -Skcity/0.4i -Gred -W1p -K -O &amp;gt;&amp;gt; $ps
+&lt;span style=&#34;color:#75715e&#34;&gt;# 绘制指北针符号，第三列为旋转角度&lt;/span&gt;
+echo &lt;span style=&#34;color:#ae81ff&#34;&gt;3&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;8&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;0&lt;/span&gt;| gmt psxy -R -J -Skcompass/0.4i -W0.6p -K -O &amp;gt;&amp;gt; $ps
+echo &lt;span style=&#34;color:#ae81ff&#34;&gt;5&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;8&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;45&lt;/span&gt;| gmt psxy -R -J -Skcompass/0.5i -Gblue -K -O &amp;gt;&amp;gt; $ps
+echo &lt;span style=&#34;color:#ae81ff&#34;&gt;7&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;8&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;90&lt;/span&gt;| gmt psxy -R -J -Skcompass/0.6i -Gred -W1p -K -O &amp;gt;&amp;gt; $ps
+&lt;span style=&#34;color:#75715e&#34;&gt;# 绘制三角形和五角星符号&lt;/span&gt;
+echo &lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt; | gmt psxy -R -J -Sa0.5i -Wblack -Gred -K -O &amp;gt;&amp;gt; $ps
+echo &lt;span style=&#34;color:#ae81ff&#34;&gt;4&lt;/span&gt; &lt;span style=&#34;color:#ae81ff&#34;&gt;2&lt;/span&gt; | gmt psxy -R -J -St0.5i -Wblack -Ggreen -K -O &amp;gt;&amp;gt; $ps
+&lt;span style=&#34;color:#75715e&#34;&gt;# 绘制图例&lt;/span&gt;
+gmt pslegend -R -J -F+p1p -DjBR+w1.2i+o0.2c/0.2c -O &amp;gt;&amp;gt; $ps &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;lt;&amp;lt; EOF
+&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;S 0.2c kcompass 0.15i white 0.5p 1c compass
+&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;S 0.2c kcity 0.15i white 0.5p 1c city
+&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;S 0.2c a 0.15i red 0.5p 1c capital
+&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;S 0.2c t 0.15i green 0.5p 1c station
+&lt;/span&gt;&lt;span style=&#34;color:#e6db74&#34;&gt;EOF&lt;/span&gt;
+gmt psconvert -Tg -A -P $ps -Z
+rm -rf gmt.*&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+  &lt;/div&gt;
+  
+  
+&lt;/div&gt;
+
+
+&lt;p&gt;绘图效果如下：&lt;/p&gt;
+
+
+
+
+&lt;figure&gt;
+
+&lt;img src=&#34;https://gmt-china.org/example/ex018/custom_symbol.png&#34; width=&#34;750px&#34; /&gt;
+
+
+
+&lt;figcaption data-pre=&#34;Figure &#34; data-post=&#34;:&#34; &gt;
+  &lt;h4&gt;绘制自定义符号&lt;/h4&gt;
+  
+&lt;/figcaption&gt;
+
+&lt;/figure&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

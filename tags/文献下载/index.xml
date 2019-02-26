@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>文献下载 on GMT中文社区</title>
+    <link>https://gmt-china.org/tags/%E6%96%87%E7%8C%AE%E4%B8%8B%E8%BD%BD/</link>
+    <description>Recent content in 文献下载 on GMT中文社区</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>&amp;copy; 2016–2019 GMT 中文社区</copyright>
+    <lastBuildDate>Sat, 12 Aug 2017 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="https://gmt-china.org/tags/%E6%96%87%E7%8C%AE%E4%B8%8B%E8%BD%BD/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>使用sci-hub下载文献</title>
+      <link>https://gmt-china.org/blog/sci-hub/</link>
+      <pubDate>Sat, 12 Aug 2017 00:00:00 +0000</pubDate>
+      
+      <guid>https://gmt-china.org/blog/sci-hub/</guid>
+      <description>科研人员经常要看一些全文，但由于单位不可能花钱购买所有数据库的下载权限， 因而会经常需要需要付费下载文章的情况。本文将介绍文献下载的好工具 sc</description>
+    </item>
+    
+  </channel>
+</rss>

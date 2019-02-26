@@ -1,0 +1,1067 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="generator" content="Source Themes Academic 4.0.0">
+  <meta name="generator" content="Hugo 0.54.0" />
+
+  
+
+  
+  
+  
+  
+  
+    
+    
+    
+  
+  
+
+  <meta name="author" content="田冬冬">
+
+  
+  
+  
+    
+  
+  <meta name="description" content="介绍GDAL/OGR的功能及其用法">
+
+  
+  <link rel="alternate" hreflang="en-us" href="https://gmt-china.org/blog/gdal-ogr/">
+
+  
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+  
+  <meta name="theme-color" content="#2962ff">
+  
+
+  
+  
+  
+  
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha256-eSi1q2PG6J7g7ib17yAaWMcrr5GrtohYChqibrV7PBE=" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/academicons/1.8.6/css/academicons.min.css" integrity="sha256-uFVgMKfistnJAfoCUQigIl+JfUaP47GrRKjf6CTPVmw=" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.0/css/all.css" integrity="sha384-aOkxzJ5uQz7WBObEZcHvV5JvRW3TUc2rNPA7pe3AwnsUohiw1Vj2Rgx2KSOkF5+h" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" integrity="sha256-ygkqlh3CYSUri3LhQxzdcm0n1EQvH2Y+U5S2idbLtxs=" crossorigin="anonymous">
+
+    
+    
+    
+      
+    
+    
+      
+      
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/solarized-light.min.css" crossorigin="anonymous">
+      
+    
+
+    
+
+    
+
+  
+
+  
+  
+  <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Montserrat:400,700|Roboto:400,400italic,700|Roboto+Mono">
+  
+
+  <link rel="stylesheet" href="/styles.css">
+  
+    
+    
+    
+    
+      
+    
+    
+    
+    <link rel="stylesheet" href="/css/academic.e9ae4c7a7e5d6720b3f65075ee43d374.css">
+  
+
+  
+  
+  
+
+  
+  <link rel="alternate" href="https://gmt-china.org/index.xml" type="application/rss+xml" title="GMT中文社区">
+  <link rel="feed" href="https://gmt-china.org/index.xml" type="application/rss+xml" title="GMT中文社区">
+  
+
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="icon" type="image/png" href="/img/icon.png">
+  <link rel="apple-touch-icon" type="image/png" href="/img/icon-192.png">
+
+  <link rel="canonical" href="https://gmt-china.org/blog/gdal-ogr/">
+
+  
+  
+  
+  
+    
+    
+  
+  <meta property="twitter:card" content="summary">
+  
+  <meta property="og:site_name" content="GMT中文社区">
+  <meta property="og:url" content="https://gmt-china.org/blog/gdal-ogr/">
+  <meta property="og:title" content="GDAL/OGR: 地理空间数据格式转换神器 | GMT中文社区">
+  <meta property="og:description" content="介绍GDAL/OGR的功能及其用法"><meta property="og:image" content="https://gmt-china.org/img/icon-192.png">
+  <meta property="og:locale" content="en-us">
+  
+  <meta property="article:published_time" content="2016-11-17T00:00:00&#43;00:00">
+  
+  <meta property="article:modified_time" content="2016-11-17T00:00:00&#43;00:00">
+  
+
+  
+
+  
+
+  <title>GDAL/OGR: 地理空间数据格式转换神器 | GMT中文社区</title>
+
+</head>
+<body id="top" data-spy="scroll" data-target="#TableOfContents" data-offset="71" >
+  <aside class="search-results" id="search">
+  <div class="container">
+    <section class="search-header">
+
+      <div class="row no-gutters justify-content-between mb-3">
+        <div class="col-6">
+          <h1>Search</h1>
+        </div>
+        <div class="col-6 col-search-close">
+          <a class="js-search" href="#"><i class="fas fa-times-circle text-muted" aria-hidden="true"></i></a>
+        </div>
+      </div>
+
+      <div id="search-box">
+        
+        <input name="q" id="search-query" placeholder="Search..." autocapitalize="off"
+        autocomplete="off" autocorrect="off" role="textbox" spellcheck="false" type="search">
+        
+      </div>
+
+    </section>
+    <section class="section-search-results">
+
+      <div id="search-hits">
+        
+      </div>
+
+    </section>
+  </div>
+</aside>
+
+
+<nav class="navbar navbar-light fixed-top navbar-expand-lg py-0" id="navbar-main">
+  <div class="container">
+
+    
+      <a class="navbar-brand" href="/">GMT中文社区</a>
+      
+      <button type="button" class="navbar-toggler" data-toggle="collapse"
+              data-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
+        <span><i class="fas fa-bars"></i></span>
+      </button>
+      
+
+    
+    <div class="collapse navbar-collapse" id="navbar">
+
+      
+      
+      <ul class="navbar-nav ml-auto">
+        
+
+        
+
+        
+        
+        
+
+        <li class="nav-item">
+          <a class="nav-link" href="/#">
+            
+            <span>首页</span>
+            
+          </a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link" href="/#download">
+            
+            <span>下载</span>
+            
+          </a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link" href="/#docs">
+            
+            <span>中文手册</span>
+            
+          </a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link" href="/#posts">
+            
+            <span>博客</span>
+            
+          </a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link" href="/gallery/">
+            
+            <span>图库</span>
+            
+          </a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link" href="/data/">
+            
+            <span>数据集</span>
+            
+          </a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link" href="/#people">
+            
+            <span>贡献者</span>
+            
+          </a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link" href="/#usermap">
+            
+            <span>用户分布</span>
+            
+          </a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link" href="/#contact">
+            
+            <span>联系我们</span>
+            
+          </a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link" href="/index.xml">
+            
+            <span><i class="fas fa-rss"></i></span>
+            
+          </a>
+        </li>
+
+        
+        
+
+      
+
+        
+
+        
+        <li class="nav-item">
+          <a class="nav-link js-search" href="#"><i class="fas fa-search" aria-hidden="true"></i></a>
+        </li>
+        
+
+        
+
+        
+        <li class="nav-item">
+          <a class="nav-link js-dark-toggle" href="#"><i class="fas fa-moon" aria-hidden="true"></i></a>
+        </li>
+        
+
+      </ul>
+
+    </div>
+  </div>
+</nav>
+
+
+<article class="article" itemscope itemtype="http://schema.org/Article">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+  
+  
+<div class="article-container pt-3">
+  <h1 itemprop="name">GDAL/OGR: 地理空间数据格式转换神器</h1>
+
+  
+
+  
+    
+
+
+
+<meta content="2016-11-17 00:00:00 &#43;0000 UTC" itemprop="datePublished">
+<meta content="2016-11-17 00:00:00 &#43;0000 UTC" itemprop="dateModified">
+
+<div class="article-metadata">
+
+  
+  
+  
+  
+  <div>
+    
+
+
+
+  <span itemscope itemprop="author" itemtype="http://schema.org/Person">
+      <span itemprop="name">
+        
+
+      
+      
+      
+        <a href="/authors/seisman/">田冬冬</a></span></span>
+  
+
+
+
+  </div>
+  
+  
+
+  
+  <span class="article-date">
+    
+    
+      
+    
+    <time>2016年11月17日</time>
+  </span>
+  
+
+  
+
+  
+
+  
+  
+
+  
+  
+  
+  <span class="middot-divider"></span>
+  <span class="article-categories">
+    <i class="fas fa-folder"></i>
+    
+    <a href="/categories/gmt%E5%B7%A5%E5%85%B7/">GMT工具</a>
+    
+  </span>
+  
+  
+
+  
+    
+<div class="share-box" aria-hidden="true">
+  <ul class="share">
+    <li>
+      <a class="twitter"
+         href="https://twitter.com/intent/tweet?text=GDAL%2fOGR%3a%20%e5%9c%b0%e7%90%86%e7%a9%ba%e9%97%b4%e6%95%b0%e6%8d%ae%e6%a0%bc%e5%bc%8f%e8%bd%ac%e6%8d%a2%e7%a5%9e%e5%99%a8&amp;url=https%3a%2f%2fgmt-china.org%2fblog%2fgdal-ogr%2f"
+         target="_blank" rel="noopener">
+        <i class="fab fa-twitter"></i>
+      </a>
+    </li>
+    <li>
+      <a class="facebook"
+         href="https://www.facebook.com/sharer.php?u=https%3a%2f%2fgmt-china.org%2fblog%2fgdal-ogr%2f"
+         target="_blank" rel="noopener">
+        <i class="fab fa-facebook-f"></i>
+      </a>
+    </li>
+    <li>
+      <a class="linkedin"
+         href="https://www.linkedin.com/shareArticle?mini=true&amp;url=https%3a%2f%2fgmt-china.org%2fblog%2fgdal-ogr%2f&amp;title=GDAL%2fOGR%3a%20%e5%9c%b0%e7%90%86%e7%a9%ba%e9%97%b4%e6%95%b0%e6%8d%ae%e6%a0%bc%e5%bc%8f%e8%bd%ac%e6%8d%a2%e7%a5%9e%e5%99%a8"
+         target="_blank" rel="noopener">
+        <i class="fab fa-linkedin-in"></i>
+      </a>
+    </li>
+    <li>
+      <a class="weibo"
+         href="http://service.weibo.com/share/share.php?url=https%3a%2f%2fgmt-china.org%2fblog%2fgdal-ogr%2f&amp;title=GDAL%2fOGR%3a%20%e5%9c%b0%e7%90%86%e7%a9%ba%e9%97%b4%e6%95%b0%e6%8d%ae%e6%a0%bc%e5%bc%8f%e8%bd%ac%e6%8d%a2%e7%a5%9e%e5%99%a8"
+         target="_blank" rel="noopener">
+        <i class="fab fa-weibo"></i>
+      </a>
+    </li>
+    <li>
+      <a class="email"
+         href="mailto:?subject=GDAL%2fOGR%3a%20%e5%9c%b0%e7%90%86%e7%a9%ba%e9%97%b4%e6%95%b0%e6%8d%ae%e6%a0%bc%e5%bc%8f%e8%bd%ac%e6%8d%a2%e7%a5%9e%e5%99%a8&amp;body=https%3a%2f%2fgmt-china.org%2fblog%2fgdal-ogr%2f">
+        <i class="fas fa-envelope"></i>
+      </a>
+    </li>
+  </ul>
+</div>
+
+
+  
+
+</div>
+
+    
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+  
+</div>
+
+
+
+  <div class="article-container">
+
+    <div class="article-style" itemprop="articleBody">
+      
+
+<p>GDAL/OGR 是一个地理空间数据的格式转换及处理工具。</p>
+
+<h2 id="简介">简介</h2>
+
+<p>官方主页: <a href="http://www.gdal.org" target="_blank">http://www.gdal.org</a></p>
+
+<p>GDAL/OGR 的核心分成两个部分：</p>
+
+<ul>
+<li>GDAL部分可以实现142种光栅/网格数据格式间的互相转换，比如常见的
+netCDF、GeoTiff、HDF5、XYZ 等，详见 <a href="http://www.gdal.org/formats_list.html" target="_blank">GDAL光栅格式列表</a></li>
+<li>OGR部分可以实现84种矢量数据格式间的互相转换，比如常见的
+Shapefile、GMT、KML、MapInfo、Excel 等，详见 <a href="http://www.gdal.org/ogr_formats.html" target="_blank">OGR矢量格式列表</a></li>
+</ul>
+
+<h2 id="安装">安装</h2>
+
+<h3 id="linux-用户">Linux 用户</h3>
+
+<div class="alert alert-warning">
+  <div>
+    <p>Linux 由于版本众多，以下仅供参考。如有差异，请到 <a href="https://pkgs.org" target="_blank">https://pkgs.org</a> 自行搜索。</p>
+
+  </div>
+</div>
+
+
+<p>CentOS/Fedora 用户:</p>
+
+<pre><code>sudo yum install gdal gdal-python
+</code></pre>
+
+<p>Ubuntu/Debian 用户:</p>
+
+<pre><code>sudo apt-get install gdal-bin python-gdal
+</code></pre>
+
+<h3 id="macos-用户">macOS 用户</h3>
+
+<p>推荐使用 <a href="http://brew.sh/" target="_blank">Homebrew</a> 安装:</p>
+
+<pre><code>brew install gdal --with-complete
+</code></pre>
+
+<p>非 homebrew 用户也可以到 <a href="http://www.kyngchaos.com/software/frameworks" target="_blank">William Kyngesburye 的网站</a>
+下载 dmg 安装包。</p>
+
+<h3 id="windows-用户">Windows 用户</h3>
+
+<p>Windows 用户可以通过安装 <a href="https://trac.osgeo.org/osgeo4w/" target="_blank">OSGeo4W</a> 来使用
+其提供的 GDAL。安装及使用方式如下：</p>
+
+<ol>
+<li>到 OSGeo4W 官方网站下载 <a href="http://download.osgeo.org/osgeo4w/osgeo4w-setup-x86.exe" target="_blank">32位</a>
+或 <a href="http://download.osgeo.org/osgeo4w/osgeo4w-setup-x86_64.exe" target="_blank">64位</a> 安装包</li>
+<li>双击=&gt;“Express Desktop Install”=&gt;选择下载地址=&gt;只勾选GDAL=&gt;等待下载安装完成
+（有经验的用户也可以选择“Advanced Install”以自定义安装）</li>
+<li>安装完成会在桌面生成一个名为OSGeo4W的文件夹，双击文件夹内的快捷链接即可打开一个命令行窗口</li>
+<li>命令行窗口中输入 <code>ogr2ogr --version</code> 以确认可以正常使用</li>
+<li>如果只是偶尔使用，建议按照如上方式运行；如果是经常使用，可以将 <code>C:\OSGeo4W64\bin</code>
+添加到 环境变量 PATH 中</li>
+</ol>
+
+<p>如果由于某些原因无法使用 OSGeo4W，下面两个软件包中也附带了 GDAL 工具：</p>
+
+<ul>
+<li><a href="http://www.ms4w.com/" target="_blank">MS4W</a></li>
+<li><a href="http://www.gisinternals.com/" target="_blank">GISInternals</a></li>
+</ul>
+
+<h2 id="使用">使用</h2>
+
+<p>GDAL/OGR 提供了几十个工具，每个工具用法也很丰富。此处只介绍常见工具的简单用法，
+详细用法请参考 <a href="http://www.gdal.org/gdal_utilities.html" target="_blank">GDAL工具列表</a> 和
+<a href="http://www.gdal.org/ogr_utilities.html" target="_blank">OGR工具列表</a>。</p>
+
+<div class="alert alert-note">
+  <div>
+    <p>以下用法仅在GDAL 2.4.0下测试通过，其他版本的用法可能略有不同。</p>
+
+  </div>
+</div>
+
+
+<h3 id="ogr2ogr">ogr2ogr</h3>
+
+<p><code>ogr2ogr</code> 用于地理矢量数据格式之间的相互转换。</p>
+
+<p>查看 <code>ogr2ogr</code> 支持哪些格式:</p>
+
+<pre><code>$ ogr2ogr --formats
+</code></pre>
+
+<p>将 Shapefile 格式的数据转换为 GMT 所需要的格式:</p>
+
+<pre><code>$ ogr2ogr -f OGR_GMT CHN_adm0.gmt CHN_adm0.shp
+</code></pre>
+
+<p>其中，<code>-f OGR_GMT</code> 表示将输入数据转换为 GMT 格式。</p>
+
+<h3 id="gdal-translate">gdal_translate</h3>
+
+<p><code>gdal_translate</code> 用于地理空间光栅数据格式之间的相互转换。</p>
+
+<p>查看 <code>gdal_translate</code> 支持哪些格式:</p>
+
+<pre><code>$ gdal_translate --formats
+</code></pre>
+
+<p>将 GeoTiff 数据转换为 GMT 所使用的 netCDF 格式:</p>
+
+<pre><code>$ gdal_translate -of GMT srtm_56_05.tif srtm_56_05.nc
+</code></pre>
+
+<div class="alert alert-warning">
+  <div>
+    <p>GDAL 默认不支持 GMT 所需的 netCDF 格式，所以需要注意检查当前机器安装的 GDAL 是否支持。</p>
+
+<p>若当前机器安装的 GDAL 不支持 GMT 格式，有两个解决办法：</p>
+
+<ol>
+<li>自行编译安装 GDAL 并保证其支持 GMT 格式</li>
+<li>先将数据转换为 XYZ 格式再利用 GMT 提供的 <code>xyz2grd</code> 命令转换为 netCDF 格式</li>
+</ol>
+
+  </div>
+</div>
+
+
+<h3 id="gdal-merge-py">gdal_merge.py</h3>
+
+<p><code>gdal_merge.py</code> 用于将合并多个光栅文件。</p>
+
+<p>将多个 GeoTiff 文件合并为一个 GeoTiff 文件:</p>
+
+<pre><code>$ gdal_merge.py -o output.tif srtm_56_07.tif srtm_57_07.tif
+</code></pre>
+
+<h2 id="参考资料">参考资料</h2>
+
+<ul>
+<li><a href="http://www.gdal.org/" target="_blank">GDAL官方网站</a></li>
+<li><a href="http://www.gdal.org/gdal_utilities.html" target="_blank">GDAL工具列表</a></li>
+<li><a href="http://www.gdal.org/ogr_utilities.html" target="_blank">OGR工具列表</a></li>
+<li><a href="http://headfirst-gdal.readthedocs.io/en/latest/index.html" target="_blank">GDAL中文教程</a></li>
+</ul>
+
+    </div>
+
+    
+
+
+<div class="article-tags">
+  
+  <a class="badge badge-light" href="/tags/%E6%A0%BC%E5%BC%8F%E8%BD%AC%E6%8D%A2/">格式转换</a>
+  
+</div>
+
+
+
+
+    
+      
+
+
+
+
+
+
+  
+  
+    
+  
+  
+
+
+
+
+
+
+
+<div class="media author-card" itemscope itemtype="http://schema.org/Person">
+  
+  
+  <img class="portrait mr-3" src="/author/seisman/avatar_hu100a98b67a1d5419ea422f460edae8cc_249634_250x250_fill_q75_box_center.jpg" itemprop="image" alt="Avatar">
+  
+
+  <div class="media-body">
+    <h5 class="card-title" itemprop="name"><a href="/authors/seisman">田冬冬</a></h5>
+    <h6 class="card-subtitle">密西根州立大学 博士后</h6>
+    <p class="card-text" itemprop="description">GMT中文社区创立者及主要维护者，SeisMan博客博主。</p>
+    <ul class="network-icon" aria-hidden="true">
+      
+      
+      
+      
+        
+      
+      
+      
+      
+      
+        
+      
+      <li>
+        <a itemprop="sameAs" href="https://github.com/seisman" target="_blank" rel="noopener">
+          <i class="fab fa-github"></i>
+        </a>
+      </li>
+      
+      
+      
+      
+        
+      
+      
+      
+      
+      
+        
+      
+      <li>
+        <a itemprop="sameAs" href="https://seisman.info/" target="_blank" rel="noopener">
+          <i class="fas fa-globe"></i>
+        </a>
+      </li>
+      
+      
+      
+      
+        
+      
+      
+      
+      
+      
+      <li>
+        <a itemprop="sameAs" href="mailto:tiandong@msu.edu" >
+          <i class="fas fa-envelope"></i>
+        </a>
+      </li>
+      
+      
+      
+      
+      
+      
+      
+      
+        
+      
+      <li>
+        <a itemprop="sameAs" href="http://orcid.org/0000-0001-7967-1197" target="_blank" rel="noopener">
+          <i class="ai ai-orcid"></i>
+        </a>
+      </li>
+      
+      
+      
+      
+      
+      
+      
+      
+        
+      
+      <li>
+        <a itemprop="sameAs" href="https://scholar.google.com/citations?user=VITag6sAAAAJ" target="_blank" rel="noopener">
+          <i class="ai ai-google-scholar"></i>
+        </a>
+      </li>
+      
+      
+      
+      
+      
+      
+      
+      
+        
+      
+      <li>
+        <a itemprop="sameAs" href="https://www.researchgate.net/profile/Dongdong_Tian" target="_blank" rel="noopener">
+          <i class="ai ai-researchgate"></i>
+        </a>
+      </li>
+      
+    </ul>
+  </div>
+</div>
+
+
+
+      
+      
+    
+
+    
+    <div class="article-widget">
+      <div class="post-nav">
+  
+  <div class="post-nav-item">
+    <div class="meta-nav">Next</div>
+    <a href="https://gmt-china.org/blog/sci-hub/" rel="next">使用sci-hub下载文献</a>
+  </div>
+  
+  
+  <div class="post-nav-item">
+    <div class="meta-nav">Previous</div>
+    <a href="https://gmt-china.org/blog/unix-tools-for-windows/" rel="prev">Windows 下可用的 Unix 工具</a>
+  </div>
+  
+</div>
+
+    </div>
+    
+
+    
+<section id="comments">
+  <div id="gitalk-container"></div>
+
+<link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+<script type="text/javascript">
+  var gitalk = new Gitalk({
+    clientID: '33c0af3846f5099c3375',
+    clientSecret: '89c589212198ac2c0967fe40719e404b269fab8a',
+    owner: 'gmt-china',
+    repo: 'gitalk',
+    admin: ['zhaozhiyuan1989','seisman','wangliang1989'],
+    body: location.href,
+  });
+  gitalk.render('gitalk-container');
+</script>
+
+</section>
+
+
+
+  </div>
+</article>
+
+<div class="container">
+  <footer class="site-footer">
+  
+
+  <p class="powered-by">
+    &copy; 2016–2019 GMT 中文社区 &middot; 
+
+    Powered by the
+    <a href="https://sourcethemes.com/academic/" target="_blank" rel="noopener">Academic theme</a> for
+    <a href="https://gohugo.io" target="_blank" rel="noopener">Hugo</a>.
+
+    
+    <span class="float-right" aria-hidden="true">
+      <a href="#" id="back_to_top">
+        <span class="button_icon">
+          <i class="fas fa-chevron-up fa-2x"></i>
+        </span>
+      </a>
+    </span>
+    
+  </p>
+</footer>
+
+</div>
+
+
+<div id="modal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Cite</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <pre><code class="tex hljs"></code></pre>
+      </div>
+      <div class="modal-footer">
+        <a class="btn btn-outline-primary my-1 js-copy-cite" href="#" target="_blank">
+          <i class="fas fa-copy"></i> Copy
+        </a>
+        <a class="btn btn-outline-primary my-1 js-download-cite" href="#" target="_blank">
+          <i class="fas fa-download"></i> Download
+        </a>
+        <div id="modal-error"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+    
+
+    
+    
+    
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha512-+NqPlbbtM1QqiK8ZAo4Yrj2c4lNQoGv8P79DPtKzj++l5jnN39rHA/xsqn8zE9l0uSoxaCdrOgFs6yjyfbBxSg==" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.imagesloaded/4.1.3/imagesloaded.pkgd.min.js" integrity="sha512-umsR78NN0D23AzgoZ11K7raBD+R6hqKojyBZs1w8WvYlsI+QuKRGBx3LFCwhatzBunCjDuJpDHwxD13sLMbpRA==" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha256-VsEqElsCHSGmnmHXGQzvoWjWwoznFSZc6hs7ARLRacQ=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.isotope/3.0.4/isotope.pkgd.min.js" integrity="sha512-VDBOIlDbuC4VWxGJNmuFRQ0Li0SKkDpmGyuhAG5LTDLd/dJ/S0WMVxriR2Y+CyPL5gzjpN4f/6iqWVBJlht0tQ==" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" integrity="sha256-X5PoE3KU5l+JcX+w09p/wHl9AzK333C4hJ2I9S5mD4M=" crossorigin="anonymous"></script>
+
+      
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js" integrity="sha256-/BfiIkHlHoVihZdc6TFuj7MmJ0TWcWsMXkeDFwhi0zw=" crossorigin="anonymous"></script>
+        
+        <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/dos.min.js"></script>
+        
+      
+
+      
+      
+    
+
+    
+    
+
+    
+    
+    
+
+    
+    
+    <script>hljs.initHighlightingOnLoad();</script>
+    
+
+    
+    
+    <script>
+      const search_index_filename = "/index.json";
+      const i18n = {
+        'placeholder': "Search...",
+        'results': "results found",
+        'no_results': "No results found"
+      };
+      const content_type = {
+        'post': "Posts",
+        'project': "Projects",
+        'publication' : "Publications",
+        'talk' : "Talks"
+        };
+    </script>
+    
+
+    
+    
+
+    
+    
+    <script id="search-hit-fuse-template" type="text/x-template">
+      <div class="search-hit" id="summary-{{key}}">
+      <div class="search-hit-content">
+        <div class="search-hit-name">
+          <a href="{{relpermalink}}">{{title}}</a>
+          <div class="article-metadata search-hit-type">{{type}}</div>
+          <p class="search-hit-description">{{snippet}}</p>
+        </div>
+      </div>
+      </div>
+    </script>
+    
+
+    
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.1/fuse.min.js" integrity="sha256-VzgmKYmhsGNNN4Ph1kMW+BjoYJM2jV5i4IlFoeZA9XI=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js" integrity="sha256-4HLtjeVgH0eIB3aZ9mLYF6E8oU5chNdjU6p6rrXpl9U=" crossorigin="anonymous"></script>
+    
+
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+      
+    
+    
+    
+    
+    <script src="/js/academic.min.db3d6f315d07c75ac150285a72ff5e1f.js"></script>
+
+  </body>
+</html>
+

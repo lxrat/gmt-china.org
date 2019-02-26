@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Linux on GMT中文社区</title>
+    <link>https://gmt-china.org/tags/linux/</link>
+    <description>Recent content in Linux on GMT中文社区</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>&amp;copy; 2016–2019 GMT 中文社区</copyright>
+    <lastBuildDate>Sun, 01 Apr 2018 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="https://gmt-china.org/tags/linux/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>将 Bash 脚本改成 Bat 脚本</title>
+      <link>https://gmt-china.org/blog/bash2bat/</link>
+      <pubDate>Sun, 01 Apr 2018 00:00:00 +0000</pubDate>
+      
+      <guid>https://gmt-china.org/blog/bash2bat/</guid>
+      <description>&lt;p&gt;社区提供的 GMT 绘图脚本多是基于 Linux 下的 bash 脚本，有相当一部分用户并不熟悉
+bash，因此有必要介绍如何将 bash 脚本改成 Windows 下可用的 bat 脚本。&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Windows 下可用的 Unix 工具</title>
+      <link>https://gmt-china.org/blog/unix-tools-for-windows/</link>
+      <pubDate>Sat, 29 Oct 2016 00:00:00 +0000</pubDate>
+      
+      <guid>https://gmt-china.org/blog/unix-tools-for-windows/</guid>
+      <description>UnixTools.zip 为满足 Windows 下的 GMT 用户对 Linux 工具的需求，我们将常用的 Linux 工具打包供 Windows 用户下载使用。 直接下载 UnixTools.zip 并将解压得到的 exe 文件复制到 GMT 的 bin 目录即可（比如默认的 C</description>
+    </item>
+    
+  </channel>
+</rss>
